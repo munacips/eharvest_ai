@@ -1,0 +1,440 @@
+Iso3,StartDate,EndDate,Area Code,Area Code (M49),Area,Item Code,Item,Element Code,Element,Year Code,Year,Unit,Value,Flag
+#country+code,#date+start,#date+end,,,#country+name,#indicator+code,#indicator+name,,,,#date+year,#indicator+type,#indicator+value+num,
+ZWE,1970-01-01,1970-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",1970,1970,SLC,47.9254558791,X
+ZWE,1971-01-01,1971-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",1971,1971,SLC,50.9441799264,X
+ZWE,1972-01-01,1972-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",1972,1972,SLC,58.0078544733,X
+ZWE,1973-01-01,1973-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",1973,1973,SLC,69.2643086327,X
+ZWE,1974-01-01,1974-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",1974,1974,SLC,81.3032654165,X
+ZWE,1975-01-01,1975-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",1975,1975,SLC,88.4354500416,X
+ZWE,1976-01-01,1976-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",1976,1976,SLC,88.0967554763,X
+ZWE,1977-01-01,1977-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",1977,1977,SLC,94.8976692818,X
+ZWE,1978-01-01,1978-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",1978,1978,SLC,97.0324659374,X
+ZWE,1979-01-01,1979-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",1979,1979,SLC,110.8925616840,X
+ZWE,1980-01-01,1980-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",1980,1980,SLC,128.9602928706,X
+ZWE,1981-01-01,1981-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",1981,1981,SLC,137.8830589417,X
+ZWE,1982-01-01,1982-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",1982,1982,SLC,143.2035012446,X
+ZWE,1983-01-01,1983-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",1983,1983,SLC,128.1646584328,X
+ZWE,1984-01-01,1984-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",1984,1984,SLC,106.8965043669,X
+ZWE,1985-01-01,1985-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",1985,1985,SLC,110.6482894431,X
+ZWE,1986-01-01,1986-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",1986,1986,SLC,119.4789361073,X
+ZWE,1987-01-01,1987-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",1987,1987,SLC,128.1204171894,X
+ZWE,1988-01-01,1988-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",1988,1988,SLC,138.0865780716,X
+ZWE,1989-01-01,1989-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",1989,1989,SLC,138.7902577447,X
+ZWE,1990-01-01,1990-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",1990,1990,SLC,137.6395533134,X
+ZWE,1991-01-01,1991-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",1991,1991,SLC,121.7053941269,X
+ZWE,1992-01-01,1992-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",1992,1992,SLC,107.9541698272,X
+ZWE,1993-01-01,1993-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",1993,1993,SLC,102.6980763556,X
+ZWE,1994-01-01,1994-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",1994,1994,SLC,102.0569298545,X
+ZWE,1995-01-01,1995-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",1995,1995,SLC,105.7845160977,X
+ZWE,1996-01-01,1996-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",1996,1996,SLC,117.3405542552,X
+ZWE,1997-01-01,1997-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",1997,1997,SLC,119.0220924787,X
+ZWE,1998-01-01,1998-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",1998,1998,SLC,82.9746293522,X
+ZWE,1999-01-01,1999-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",1999,1999,SLC,81.8081006046,X
+ZWE,2000-01-01,2000-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",2000,2000,SLC,84.2126972857,X
+ZWE,2001-01-01,2001-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",2001,2001,SLC,83.7826413034,X
+ZWE,2002-01-01,2002-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",2002,2002,SLC,84.5084805920,X
+ZWE,2003-01-01,2003-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",2003,2003,SLC,86.1098342009,X
+ZWE,2004-01-01,2004-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",2004,2004,SLC,85.5553935125,X
+ZWE,2005-01-01,2005-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",2005,2005,SLC,86.4469825623,X
+ZWE,2006-01-01,2006-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",2006,2006,SLC,87.9490751952,X
+ZWE,2007-01-01,2007-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",2007,2007,SLC,89.7504056324,X
+ZWE,2008-01-01,2008-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",2008,2008,SLC,85.9565992280,X
+ZWE,2009-01-01,2009-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",2009,2009,SLC,82.0386023631,X
+ZWE,2010-01-01,2010-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",2010,2010,SLC,85.4008763779,X
+ZWE,2011-01-01,2011-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",2011,2011,SLC,87.5813111191,X
+ZWE,2012-01-01,2012-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",2012,2012,SLC,91.1095913927,X
+ZWE,2013-01-01,2013-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",2013,2013,SLC,99.6471092139,X
+ZWE,2014-01-01,2014-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",2014,2014,SLC,99.3958581746,X
+ZWE,2015-01-01,2015-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",2015,2015,SLC,100.0000000000,X
+ZWE,2016-01-01,2016-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",2016,2016,SLC,102.1609923516,X
+ZWE,2017-01-01,2017-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",2017,2017,SLC,104.6555553062,X
+ZWE,2018-01-01,2018-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",2018,2018,SLC,107.2346922534,X
+ZWE,2019-01-01,2019-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",2019,2019,SLC,109.1261035343,X
+ZWE,2020-01-01,2020-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",2020,2020,SLC,113.5084126518,X
+ZWE,2021-01-01,2021-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",2021,2021,SLC,116.4975410612,X
+ZWE,2022-01-01,2022-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",2022,2022,SLC,120.2816225686,X
+ZWE,2023-01-01,2023-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",2023,2023,SLC,131.2006389578,X
+ZWE,2024-01-01,2024-12-31,181,'716,Zimbabwe,22024,GDP Deflator,62250,"Value Standard Local Currency, 2015 prices",2024,2024,SLC,1563.2629682850,E
+ZWE,1970-01-01,1970-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",1970,1970,USD,47.9254558791,X
+ZWE,1971-01-01,1971-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",1971,1971,USD,50.9441799264,X
+ZWE,1972-01-01,1972-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",1972,1972,USD,58.0078544733,X
+ZWE,1973-01-01,1973-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",1973,1973,USD,69.2643086327,X
+ZWE,1974-01-01,1974-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",1974,1974,USD,81.3032654165,X
+ZWE,1975-01-01,1975-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",1975,1975,USD,88.4354500416,X
+ZWE,1976-01-01,1976-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",1976,1976,USD,88.0967554763,X
+ZWE,1977-01-01,1977-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",1977,1977,USD,94.8976692818,X
+ZWE,1978-01-01,1978-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",1978,1978,USD,97.0324659374,X
+ZWE,1979-01-01,1979-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",1979,1979,USD,110.8925616840,X
+ZWE,1980-01-01,1980-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",1980,1980,USD,128.9602928706,X
+ZWE,1981-01-01,1981-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",1981,1981,USD,137.8830589417,X
+ZWE,1982-01-01,1982-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",1982,1982,USD,143.2035012446,X
+ZWE,1983-01-01,1983-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",1983,1983,USD,128.1646584328,X
+ZWE,1984-01-01,1984-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",1984,1984,USD,106.8965043669,X
+ZWE,1985-01-01,1985-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",1985,1985,USD,110.6482894431,X
+ZWE,1986-01-01,1986-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",1986,1986,USD,119.4789361073,X
+ZWE,1987-01-01,1987-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",1987,1987,USD,128.1204171894,X
+ZWE,1988-01-01,1988-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",1988,1988,USD,138.0865780716,X
+ZWE,1989-01-01,1989-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",1989,1989,USD,138.7902577447,X
+ZWE,1990-01-01,1990-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",1990,1990,USD,137.6395533134,X
+ZWE,1991-01-01,1991-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",1991,1991,USD,121.7053941269,X
+ZWE,1992-01-01,1992-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",1992,1992,USD,107.9541698272,X
+ZWE,1993-01-01,1993-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",1993,1993,USD,102.6980763556,X
+ZWE,1994-01-01,1994-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",1994,1994,USD,102.0569298545,X
+ZWE,1995-01-01,1995-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",1995,1995,USD,105.7845160977,X
+ZWE,1996-01-01,1996-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",1996,1996,USD,117.3405542552,X
+ZWE,1997-01-01,1997-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",1997,1997,USD,119.0220924787,X
+ZWE,1998-01-01,1998-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",1998,1998,USD,82.9746293522,X
+ZWE,1999-01-01,1999-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",1999,1999,USD,81.8081006046,X
+ZWE,2000-01-01,2000-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",2000,2000,USD,84.2126972857,X
+ZWE,2001-01-01,2001-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",2001,2001,USD,83.7826413034,X
+ZWE,2002-01-01,2002-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",2002,2002,USD,84.5084805920,X
+ZWE,2003-01-01,2003-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",2003,2003,USD,86.1098342009,X
+ZWE,2004-01-01,2004-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",2004,2004,USD,85.5553935125,X
+ZWE,2005-01-01,2005-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",2005,2005,USD,86.4469825623,X
+ZWE,2006-01-01,2006-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",2006,2006,USD,87.9490751952,X
+ZWE,2007-01-01,2007-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",2007,2007,USD,89.7504056324,X
+ZWE,2008-01-01,2008-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",2008,2008,USD,85.9565992280,X
+ZWE,2009-01-01,2009-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",2009,2009,USD,82.0386023631,X
+ZWE,2010-01-01,2010-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",2010,2010,USD,85.4008763779,X
+ZWE,2011-01-01,2011-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",2011,2011,USD,87.5813111191,X
+ZWE,2012-01-01,2012-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",2012,2012,USD,91.1095913927,X
+ZWE,2013-01-01,2013-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",2013,2013,USD,99.6471092139,X
+ZWE,2014-01-01,2014-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",2014,2014,USD,99.3958581746,X
+ZWE,2015-01-01,2015-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",2015,2015,USD,100.0000000000,X
+ZWE,2016-01-01,2016-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",2016,2016,USD,102.1609923516,X
+ZWE,2017-01-01,2017-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",2017,2017,USD,104.6555553062,X
+ZWE,2018-01-01,2018-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",2018,2018,USD,107.2346922534,X
+ZWE,2019-01-01,2019-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",2019,2019,USD,109.1261035343,X
+ZWE,2020-01-01,2020-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",2020,2020,USD,113.5084126518,X
+ZWE,2021-01-01,2021-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",2021,2021,USD,116.4975410612,X
+ZWE,2022-01-01,2022-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",2022,2022,USD,120.2816225686,X
+ZWE,2023-01-01,2023-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",2023,2023,USD,131.2006389578,X
+ZWE,2024-01-01,2024-12-31,181,'716,Zimbabwe,22024,GDP Deflator,6179,"Value US$, 2015 prices",2024,2024,USD,1563.2629682850,E
+ZWE,1970-01-01,1970-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",1970,1970,SLC,11.9348098999,X
+ZWE,1971-01-01,1971-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",1971,1971,SLC,12.8411884453,X
+ZWE,1972-01-01,1972-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",1972,1972,SLC,14.7251830912,X
+ZWE,1973-01-01,1973-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",1973,1973,SLC,17.5049872454,X
+ZWE,1974-01-01,1974-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",1974,1974,SLC,19.0539972321,X
+ZWE,1975-01-01,1975-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",1975,1975,SLC,22.5962169981,X
+ZWE,1976-01-01,1976-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",1976,1976,SLC,23.2099967477,X
+ZWE,1977-01-01,1977-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",1977,1977,SLC,26.7017112317,X
+ZWE,1978-01-01,1978-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",1978,1978,SLC,28.3235665343,X
+ZWE,1979-01-01,1979-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",1979,1979,SLC,32.4618629577,X
+ZWE,1980-01-01,1980-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",1980,1980,SLC,38.3929147044,X
+ZWE,1981-01-01,1981-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",1981,1981,SLC,41.2177703386,X
+ZWE,1982-01-01,1982-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",1982,1982,SLC,42.9846293796,X
+ZWE,1983-01-01,1983-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",1983,1983,SLC,39.5300488565,X
+ZWE,1984-01-01,1984-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",1984,1984,SLC,37.7339539565,X
+ZWE,1985-01-01,1985-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",1985,1985,SLC,39.4468901263,X
+ZWE,1986-01-01,1986-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",1986,1986,SLC,43.0412297067,X
+ZWE,1987-01-01,1987-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",1987,1987,SLC,47.1392703084,X
+ZWE,1988-01-01,1988-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",1988,1988,SLC,47.3640996216,X
+ZWE,1989-01-01,1989-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",1989,1989,SLC,45.7576999627,X
+ZWE,1990-01-01,1990-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",1990,1990,SLC,46.8496454583,X
+ZWE,1991-01-01,1991-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",1991,1991,SLC,40.1528905894,X
+ZWE,1992-01-01,1992-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",1992,1992,SLC,39.3079570699,X
+ZWE,1993-01-01,1993-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",1993,1993,SLC,37.6269705633,X
+ZWE,1994-01-01,1994-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",1994,1994,SLC,34.6414255579,X
+ZWE,1995-01-01,1995-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",1995,1995,SLC,40.5119485293,X
+ZWE,1996-01-01,1996-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",1996,1996,SLC,60.0890506546,X
+ZWE,1997-01-01,1997-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",1997,1997,SLC,85.7466536406,X
+ZWE,1998-01-01,1998-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",1998,1998,SLC,33.5713254860,X
+ZWE,1999-01-01,1999-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",1999,1999,SLC,28.5418057291,X
+ZWE,2000-01-01,2000-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",2000,2000,SLC,77.4248640087,X
+ZWE,2001-01-01,2001-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",2001,2001,SLC,69.2677983731,X
+ZWE,2002-01-01,2002-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",2002,2002,SLC,59.9729491687,X
+ZWE,2003-01-01,2003-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",2003,2003,SLC,43.7968726041,X
+ZWE,2004-01-01,2004-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",2004,2004,SLC,11.1008098133,X
+ZWE,2005-01-01,2005-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",2005,2005,SLC,3.1258193035,X
+ZWE,2006-01-01,2006-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",2006,2006,SLC,20.8792390075,X
+ZWE,2007-01-01,2007-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",2007,2007,SLC,41.9431798005,X
+ZWE,2008-01-01,2008-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",2008,2008,SLC,29.2654631904,X
+ZWE,2009-01-01,2009-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",2009,2009,SLC,97.7437158347,X
+ZWE,2010-01-01,2010-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",2010,2010,SLC,110.8012161324,X
+ZWE,2011-01-01,2011-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",2011,2011,SLC,118.2043522810,X
+ZWE,2012-01-01,2012-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",2012,2012,SLC,94.8013498323,X
+ZWE,2013-01-01,2013-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",2013,2013,SLC,104.5145242645,X
+ZWE,2014-01-01,2014-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",2014,2014,SLC,99.0897785669,X
+ZWE,2015-01-01,2015-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",2015,2015,SLC,100.0000000000,X
+ZWE,2016-01-01,2016-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",2016,2016,SLC,100.5031646971,X
+ZWE,2017-01-01,2017-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",2017,2017,SLC,120.1924622414,X
+ZWE,2018-01-01,2018-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",2018,2018,SLC,120.3242678164,X
+ZWE,2019-01-01,2019-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",2019,2019,SLC,115.4693095716,X
+ZWE,2020-01-01,2020-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",2020,2020,SLC,113.6919744360,X
+ZWE,2021-01-01,2021-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",2021,2021,SLC,154.9131043329,X
+ZWE,2022-01-01,2022-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",2022,2022,SLC,134.7350879335,X
+ZWE,2023-01-01,2023-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",2023,2023,SLC,137.6948019234,X
+ZWE,2024-01-01,2024-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,62250,"Value Standard Local Currency, 2015 prices",2024,2024,SLC,482.4967260769,E
+ZWE,1970-01-01,1970-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",1970,1970,USD,11.9348098999,X
+ZWE,1971-01-01,1971-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",1971,1971,USD,12.8411884453,X
+ZWE,1972-01-01,1972-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",1972,1972,USD,14.7251830912,X
+ZWE,1973-01-01,1973-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",1973,1973,USD,17.5049872454,X
+ZWE,1974-01-01,1974-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",1974,1974,USD,19.0539972321,X
+ZWE,1975-01-01,1975-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",1975,1975,USD,22.5962169981,X
+ZWE,1976-01-01,1976-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",1976,1976,USD,23.2099967477,X
+ZWE,1977-01-01,1977-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",1977,1977,USD,26.7017112317,X
+ZWE,1978-01-01,1978-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",1978,1978,USD,28.3235665343,X
+ZWE,1979-01-01,1979-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",1979,1979,USD,32.4618629577,X
+ZWE,1980-01-01,1980-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",1980,1980,USD,38.3929147044,X
+ZWE,1981-01-01,1981-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",1981,1981,USD,41.2177703386,X
+ZWE,1982-01-01,1982-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",1982,1982,USD,42.9846293796,X
+ZWE,1983-01-01,1983-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",1983,1983,USD,39.5300488565,X
+ZWE,1984-01-01,1984-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",1984,1984,USD,37.7339539565,X
+ZWE,1985-01-01,1985-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",1985,1985,USD,39.4468901263,X
+ZWE,1986-01-01,1986-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",1986,1986,USD,43.0412297067,X
+ZWE,1987-01-01,1987-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",1987,1987,USD,47.1392703084,X
+ZWE,1988-01-01,1988-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",1988,1988,USD,47.3640996216,X
+ZWE,1989-01-01,1989-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",1989,1989,USD,45.7576999627,X
+ZWE,1990-01-01,1990-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",1990,1990,USD,46.8496454583,X
+ZWE,1991-01-01,1991-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",1991,1991,USD,40.1528905894,X
+ZWE,1992-01-01,1992-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",1992,1992,USD,39.3079570699,X
+ZWE,1993-01-01,1993-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",1993,1993,USD,37.6269705633,X
+ZWE,1994-01-01,1994-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",1994,1994,USD,34.6414255579,X
+ZWE,1995-01-01,1995-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",1995,1995,USD,40.5119485293,X
+ZWE,1996-01-01,1996-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",1996,1996,USD,60.0890506546,X
+ZWE,1997-01-01,1997-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",1997,1997,USD,85.7466536406,X
+ZWE,1998-01-01,1998-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",1998,1998,USD,33.5713254860,X
+ZWE,1999-01-01,1999-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",1999,1999,USD,28.5418057291,X
+ZWE,2000-01-01,2000-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",2000,2000,USD,77.4248640087,X
+ZWE,2001-01-01,2001-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",2001,2001,USD,69.2677983731,X
+ZWE,2002-01-01,2002-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",2002,2002,USD,59.9729491687,X
+ZWE,2003-01-01,2003-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",2003,2003,USD,43.7968726041,X
+ZWE,2004-01-01,2004-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",2004,2004,USD,11.1008098133,X
+ZWE,2005-01-01,2005-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",2005,2005,USD,3.1258193035,X
+ZWE,2006-01-01,2006-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",2006,2006,USD,20.8792390075,X
+ZWE,2007-01-01,2007-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",2007,2007,USD,41.9431798005,X
+ZWE,2008-01-01,2008-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",2008,2008,USD,29.2654631904,X
+ZWE,2009-01-01,2009-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",2009,2009,USD,97.7437158347,X
+ZWE,2010-01-01,2010-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",2010,2010,USD,110.8012161324,X
+ZWE,2011-01-01,2011-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",2011,2011,USD,118.2043522810,X
+ZWE,2012-01-01,2012-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",2012,2012,USD,94.8013498323,X
+ZWE,2013-01-01,2013-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",2013,2013,USD,104.5145242645,X
+ZWE,2014-01-01,2014-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",2014,2014,USD,99.0897785669,X
+ZWE,2015-01-01,2015-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",2015,2015,USD,100.0000000000,X
+ZWE,2016-01-01,2016-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",2016,2016,USD,100.5031646971,X
+ZWE,2017-01-01,2017-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",2017,2017,USD,120.1924622414,X
+ZWE,2018-01-01,2018-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",2018,2018,USD,120.3242678164,X
+ZWE,2019-01-01,2019-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",2019,2019,USD,115.4693095716,X
+ZWE,2020-01-01,2020-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",2020,2020,USD,113.6919744360,X
+ZWE,2021-01-01,2021-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",2021,2021,USD,154.9131043329,X
+ZWE,2022-01-01,2022-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",2022,2022,USD,134.7350879335,X
+ZWE,2023-01-01,2023-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",2023,2023,USD,137.6948019234,X
+ZWE,2024-01-01,2024-12-31,181,'716,Zimbabwe,22025,Gross Fixed Capital Formation Deflator,6179,"Value US$, 2015 prices",2024,2024,USD,482.4967260769,E
+ZWE,1970-01-01,1970-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",1970,1970,SLC,30.3158264139,X
+ZWE,1971-01-01,1971-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",1971,1971,SLC,31.3221053853,X
+ZWE,1972-01-01,1972-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",1972,1972,SLC,35.1034180450,X
+ZWE,1973-01-01,1973-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",1973,1973,SLC,44.8279958818,X
+ZWE,1974-01-01,1974-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",1974,1974,SLC,55.8359047254,X
+ZWE,1975-01-01,1975-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",1975,1975,SLC,62.2299266990,X
+ZWE,1976-01-01,1976-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",1976,1976,SLC,55.2308453074,X
+ZWE,1977-01-01,1977-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",1977,1977,SLC,66.6435521172,X
+ZWE,1978-01-01,1978-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",1978,1978,SLC,48.7905513592,X
+ZWE,1979-01-01,1979-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",1979,1979,SLC,53.7411746353,X
+ZWE,1980-01-01,1980-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",1980,1980,SLC,78.3891776043,X
+ZWE,1981-01-01,1981-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",1981,1981,SLC,90.9748544584,X
+ZWE,1982-01-01,1982-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",1982,1982,SLC,93.1594896178,X
+ZWE,1983-01-01,1983-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",1983,1983,SLC,67.3235515914,X
+ZWE,1984-01-01,1984-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",1984,1984,SLC,60.5936877430,X
+ZWE,1985-01-01,1985-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",1985,1985,SLC,96.1264723979,X
+ZWE,1986-01-01,1986-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",1986,1986,SLC,89.9472755402,X
+ZWE,1987-01-01,1987-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",1987,1987,SLC,82.8632798744,X
+ZWE,1988-01-01,1988-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",1988,1988,SLC,105.1572602716,X
+ZWE,1989-01-01,1989-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",1989,1989,SLC,97.1336604185,X
+ZWE,1990-01-01,1990-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",1990,1990,SLC,101.7331914175,X
+ZWE,1991-01-01,1991-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",1991,1991,SLC,85.8105797669,X
+ZWE,1992-01-01,1992-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",1992,1992,SLC,45.9153739963,X
+ZWE,1993-01-01,1993-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",1993,1993,SLC,71.3913880257,X
+ZWE,1994-01-01,1994-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",1994,1994,SLC,86.9624287185,X
+ZWE,1995-01-01,1995-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",1995,1995,SLC,76.5784451695,X
+ZWE,1996-01-01,1996-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",1996,1996,SLC,118.2961055831,X
+ZWE,1997-01-01,1997-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",1997,1997,SLC,118.6490217830,X
+ZWE,1998-01-01,1998-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",1998,1998,SLC,75.2556727037,X
+ZWE,1999-01-01,1999-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",1999,1999,SLC,86.3347803903,X
+ZWE,2000-01-01,2000-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",2000,2000,SLC,81.3262747585,X
+ZWE,2001-01-01,2001-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",2001,2001,SLC,90.7726646183,X
+ZWE,2002-01-01,2002-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",2002,2002,SLC,110.5917154043,X
+ZWE,2003-01-01,2003-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",2003,2003,SLC,90.6387968895,X
+ZWE,2004-01-01,2004-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",2004,2004,SLC,44.9675472067,X
+ZWE,2005-01-01,2005-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",2005,2005,SLC,47.0707371448,X
+ZWE,2006-01-01,2006-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",2006,2006,SLC,80.1366844663,X
+ZWE,2007-01-01,2007-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",2007,2007,SLC,120.5581856700,X
+ZWE,2008-01-01,2008-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",2008,2008,SLC,126.6231474916,X
+ZWE,2009-01-01,2009-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",2009,2009,SLC,83.6277974366,X
+ZWE,2010-01-01,2010-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",2010,2010,SLC,86.9204861296,X
+ZWE,2011-01-01,2011-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",2011,2011,SLC,90.5206687036,X
+ZWE,2012-01-01,2012-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",2012,2012,SLC,94.5729172606,X
+ZWE,2013-01-01,2013-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",2013,2013,SLC,96.1620395456,X
+ZWE,2014-01-01,2014-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",2014,2014,SLC,97.7259283270,X
+ZWE,2015-01-01,2015-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",2015,2015,SLC,100.0000000000,X
+ZWE,2016-01-01,2016-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",2016,2016,SLC,101.7874806822,X
+ZWE,2017-01-01,2017-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",2017,2017,SLC,91.3587968678,X
+ZWE,2018-01-01,2018-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",2018,2018,SLC,83.5919020930,X
+ZWE,2019-01-01,2019-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",2019,2019,SLC,119.6006796514,X
+ZWE,2020-01-01,2020-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",2020,2020,SLC,98.3756476160,X
+ZWE,2021-01-01,2021-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",2021,2021,SLC,94.0436480191,X
+ZWE,2022-01-01,2022-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",2022,2022,SLC,78.6103373492,X
+ZWE,2023-01-01,2023-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",2023,2023,SLC,48.7082235421,X
+ZWE,2024-01-01,2024-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",62250,"Value Standard Local Currency, 2015 prices",2024,2024,SLC,923.5668389681,E
+ZWE,1970-01-01,1970-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",1970,1970,USD,30.3158264139,X
+ZWE,1971-01-01,1971-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",1971,1971,USD,31.3221053853,X
+ZWE,1972-01-01,1972-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",1972,1972,USD,35.1034180450,X
+ZWE,1973-01-01,1973-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",1973,1973,USD,44.8279958818,X
+ZWE,1974-01-01,1974-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",1974,1974,USD,55.8359047254,X
+ZWE,1975-01-01,1975-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",1975,1975,USD,62.2299266990,X
+ZWE,1976-01-01,1976-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",1976,1976,USD,55.2308453074,X
+ZWE,1977-01-01,1977-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",1977,1977,USD,66.6435521172,X
+ZWE,1978-01-01,1978-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",1978,1978,USD,48.7905513592,X
+ZWE,1979-01-01,1979-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",1979,1979,USD,53.7411746353,X
+ZWE,1980-01-01,1980-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",1980,1980,USD,78.3891776043,X
+ZWE,1981-01-01,1981-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",1981,1981,USD,90.9748544584,X
+ZWE,1982-01-01,1982-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",1982,1982,USD,93.1594896178,X
+ZWE,1983-01-01,1983-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",1983,1983,USD,67.3235515914,X
+ZWE,1984-01-01,1984-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",1984,1984,USD,60.5936877430,X
+ZWE,1985-01-01,1985-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",1985,1985,USD,96.1264723979,X
+ZWE,1986-01-01,1986-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",1986,1986,USD,89.9472755402,X
+ZWE,1987-01-01,1987-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",1987,1987,USD,82.8632798744,X
+ZWE,1988-01-01,1988-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",1988,1988,USD,105.1572602716,X
+ZWE,1989-01-01,1989-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",1989,1989,USD,97.1336604185,X
+ZWE,1990-01-01,1990-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",1990,1990,USD,101.7331914175,X
+ZWE,1991-01-01,1991-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",1991,1991,USD,85.8105797669,X
+ZWE,1992-01-01,1992-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",1992,1992,USD,45.9153739963,X
+ZWE,1993-01-01,1993-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",1993,1993,USD,71.3913880257,X
+ZWE,1994-01-01,1994-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",1994,1994,USD,86.9624287185,X
+ZWE,1995-01-01,1995-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",1995,1995,USD,76.5784451695,X
+ZWE,1996-01-01,1996-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",1996,1996,USD,118.2961055831,X
+ZWE,1997-01-01,1997-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",1997,1997,USD,118.6490217830,X
+ZWE,1998-01-01,1998-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",1998,1998,USD,75.2556727037,X
+ZWE,1999-01-01,1999-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",1999,1999,USD,86.3347803903,X
+ZWE,2000-01-01,2000-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",2000,2000,USD,81.3262747585,X
+ZWE,2001-01-01,2001-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",2001,2001,USD,90.7726646183,X
+ZWE,2002-01-01,2002-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",2002,2002,USD,110.5917154043,X
+ZWE,2003-01-01,2003-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",2003,2003,USD,90.6387968895,X
+ZWE,2004-01-01,2004-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",2004,2004,USD,44.9675472067,X
+ZWE,2005-01-01,2005-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",2005,2005,USD,47.0707371448,X
+ZWE,2006-01-01,2006-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",2006,2006,USD,80.1366844663,X
+ZWE,2007-01-01,2007-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",2007,2007,USD,120.5581856700,X
+ZWE,2008-01-01,2008-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",2008,2008,USD,126.6231474916,X
+ZWE,2009-01-01,2009-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",2009,2009,USD,83.6277974366,X
+ZWE,2010-01-01,2010-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",2010,2010,USD,86.9204861296,X
+ZWE,2011-01-01,2011-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",2011,2011,USD,90.5206687036,X
+ZWE,2012-01-01,2012-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",2012,2012,USD,94.5729172606,X
+ZWE,2013-01-01,2013-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",2013,2013,USD,96.1620395456,X
+ZWE,2014-01-01,2014-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",2014,2014,USD,97.7259283270,X
+ZWE,2015-01-01,2015-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",2015,2015,USD,100.0000000000,X
+ZWE,2016-01-01,2016-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",2016,2016,USD,101.7874806822,X
+ZWE,2017-01-01,2017-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",2017,2017,USD,91.3587968678,X
+ZWE,2018-01-01,2018-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",2018,2018,USD,83.5919020930,X
+ZWE,2019-01-01,2019-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",2019,2019,USD,119.6006796514,X
+ZWE,2020-01-01,2020-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",2020,2020,USD,98.3756476160,X
+ZWE,2021-01-01,2021-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",2021,2021,USD,94.0436480191,X
+ZWE,2022-01-01,2022-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",2022,2022,USD,78.6103373492,X
+ZWE,2023-01-01,2023-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",2023,2023,USD,48.7082235421,X
+ZWE,2024-01-01,2024-12-31,181,'716,Zimbabwe,22026,"Value Added Deflator (Agriculture, forestry and fishery)",6179,"Value US$, 2015 prices",2024,2024,USD,923.5668389681,E
+ZWE,1970-01-01,1970-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",1970,1970,SLC,50.4201396282,X
+ZWE,1971-01-01,1971-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",1971,1971,SLC,58.0159642380,X
+ZWE,1972-01-01,1972-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",1972,1972,SLC,62.6540937923,X
+ZWE,1973-01-01,1973-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",1973,1973,SLC,75.4010708940,X
+ZWE,1974-01-01,1974-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",1974,1974,SLC,86.7451238314,X
+ZWE,1975-01-01,1975-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",1975,1975,SLC,95.0743839677,X
+ZWE,1976-01-01,1976-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",1976,1976,SLC,98.7636277610,X
+ZWE,1977-01-01,1977-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",1977,1977,SLC,99.1037967806,X
+ZWE,1978-01-01,1978-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",1978,1978,SLC,107.3757879631,X
+ZWE,1979-01-01,1979-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",1979,1979,SLC,116.6168370233,X
+ZWE,1980-01-01,1980-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",1980,1980,SLC,137.1465965836,X
+ZWE,1981-01-01,1981-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",1981,1981,SLC,147.7050522007,X
+ZWE,1982-01-01,1982-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",1982,1982,SLC,148.8551365638,X
+ZWE,1983-01-01,1983-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",1983,1983,SLC,147.5796504842,X
+ZWE,1984-01-01,1984-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",1984,1984,SLC,128.1680830816,X
+ZWE,1985-01-01,1985-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",1985,1985,SLC,100.2696465608,X
+ZWE,1986-01-01,1986-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",1986,1986,SLC,115.1685615359,X
+ZWE,1987-01-01,1987-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",1987,1987,SLC,130.7763486273,X
+ZWE,1988-01-01,1988-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",1988,1988,SLC,135.6085182881,X
+ZWE,1989-01-01,1989-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",1989,1989,SLC,159.2306159493,X
+ZWE,1990-01-01,1990-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",1990,1990,SLC,142.3041253505,X
+ZWE,1991-01-01,1991-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",1991,1991,SLC,141.5294658358,X
+ZWE,1992-01-01,1992-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",1992,1992,SLC,138.2208727782,X
+ZWE,1993-01-01,1993-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",1993,1993,SLC,106.6040159478,X
+ZWE,1994-01-01,1994-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",1994,1994,SLC,99.0078944670,X
+ZWE,1995-01-01,1995-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",1995,1995,SLC,111.3604306280,X
+ZWE,1996-01-01,1996-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",1996,1996,SLC,101.1633335397,X
+ZWE,1997-01-01,1997-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",1997,1997,SLC,95.6187498556,X
+ZWE,1998-01-01,1998-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",1998,1998,SLC,64.6566854668,X
+ZWE,1999-01-01,1999-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",1999,1999,SLC,61.8125876474,X
+ZWE,2000-01-01,2000-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",2000,2000,SLC,64.5663939845,X
+ZWE,2001-01-01,2001-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",2001,2001,SLC,65.3070589965,X
+ZWE,2002-01-01,2002-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",2002,2002,SLC,57.5939715374,X
+ZWE,2003-01-01,2003-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",2003,2003,SLC,72.7007801522,X
+ZWE,2004-01-01,2004-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",2004,2004,SLC,74.3676243589,X
+ZWE,2005-01-01,2005-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",2005,2005,SLC,32.4243979083,X
+ZWE,2006-01-01,2006-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",2006,2006,SLC,149.4435910492,X
+ZWE,2007-01-01,2007-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",2007,2007,SLC,43.7351955913,X
+ZWE,2008-01-01,2008-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",2008,2008,SLC,66.5980120021,X
+ZWE,2009-01-01,2009-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",2009,2009,SLC,88.2070393822,X
+ZWE,2010-01-01,2010-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",2010,2010,SLC,52.9655314405,X
+ZWE,2011-01-01,2011-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",2011,2011,SLC,54.2716095074,X
+ZWE,2012-01-01,2012-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",2012,2012,SLC,95.7286726878,X
+ZWE,2013-01-01,2013-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",2013,2013,SLC,98.8269544052,X
+ZWE,2014-01-01,2014-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",2014,2014,SLC,103.6323919513,X
+ZWE,2015-01-01,2015-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",2015,2015,SLC,100.0000000000,X
+ZWE,2016-01-01,2016-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",2016,2016,SLC,99.8458496662,X
+ZWE,2017-01-01,2017-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",2017,2017,SLC,127.8833985505,X
+ZWE,2018-01-01,2018-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",2018,2018,SLC,131.9510023060,X
+ZWE,2019-01-01,2019-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",2019,2019,SLC,146.9795999499,X
+ZWE,2020-01-01,2020-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",2020,2020,SLC,190.8346251412,X
+ZWE,2021-01-01,2021-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",2021,2021,SLC,166.4142992412,X
+ZWE,2022-01-01,2022-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",2022,2022,SLC,297.0544682515,X
+ZWE,2023-01-01,2023-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),62250,"Value Standard Local Currency, 2015 prices",2023,2023,SLC,267.2879551237,X
+ZWE,1970-01-01,1970-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",1970,1970,USD,50.4201396282,X
+ZWE,1971-01-01,1971-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",1971,1971,USD,58.0159642380,X
+ZWE,1972-01-01,1972-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",1972,1972,USD,62.6540937923,X
+ZWE,1973-01-01,1973-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",1973,1973,USD,75.4010708940,X
+ZWE,1974-01-01,1974-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",1974,1974,USD,86.7451238314,X
+ZWE,1975-01-01,1975-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",1975,1975,USD,95.0743839677,X
+ZWE,1976-01-01,1976-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",1976,1976,USD,98.7636277610,X
+ZWE,1977-01-01,1977-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",1977,1977,USD,99.1037967806,X
+ZWE,1978-01-01,1978-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",1978,1978,USD,107.3757879631,X
+ZWE,1979-01-01,1979-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",1979,1979,USD,116.6168370233,X
+ZWE,1980-01-01,1980-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",1980,1980,USD,137.1465965836,X
+ZWE,1981-01-01,1981-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",1981,1981,USD,147.7050522007,X
+ZWE,1982-01-01,1982-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",1982,1982,USD,148.8551365638,X
+ZWE,1983-01-01,1983-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",1983,1983,USD,147.5796504842,X
+ZWE,1984-01-01,1984-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",1984,1984,USD,128.1680830816,X
+ZWE,1985-01-01,1985-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",1985,1985,USD,100.2696465608,X
+ZWE,1986-01-01,1986-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",1986,1986,USD,115.1685615359,X
+ZWE,1987-01-01,1987-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",1987,1987,USD,130.7763486273,X
+ZWE,1988-01-01,1988-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",1988,1988,USD,135.6085182881,X
+ZWE,1989-01-01,1989-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",1989,1989,USD,159.2306159493,X
+ZWE,1990-01-01,1990-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",1990,1990,USD,142.3041253505,X
+ZWE,1991-01-01,1991-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",1991,1991,USD,141.5294658358,X
+ZWE,1992-01-01,1992-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",1992,1992,USD,138.2208727782,X
+ZWE,1993-01-01,1993-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",1993,1993,USD,106.6040159478,X
+ZWE,1994-01-01,1994-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",1994,1994,USD,99.0078944670,X
+ZWE,1995-01-01,1995-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",1995,1995,USD,111.3604306280,X
+ZWE,1996-01-01,1996-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",1996,1996,USD,101.1633335397,X
+ZWE,1997-01-01,1997-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",1997,1997,USD,95.6187498556,X
+ZWE,1998-01-01,1998-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",1998,1998,USD,64.6566854668,X
+ZWE,1999-01-01,1999-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",1999,1999,USD,61.8125876474,X
+ZWE,2000-01-01,2000-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",2000,2000,USD,64.5663939845,X
+ZWE,2001-01-01,2001-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",2001,2001,USD,65.3070589965,X
+ZWE,2002-01-01,2002-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",2002,2002,USD,57.5939715374,X
+ZWE,2003-01-01,2003-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",2003,2003,USD,72.7007801522,X
+ZWE,2004-01-01,2004-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",2004,2004,USD,74.3676243589,X
+ZWE,2005-01-01,2005-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",2005,2005,USD,32.4243979083,X
+ZWE,2006-01-01,2006-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",2006,2006,USD,149.4435910492,X
+ZWE,2007-01-01,2007-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",2007,2007,USD,43.7351955913,X
+ZWE,2008-01-01,2008-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",2008,2008,USD,66.5980120021,X
+ZWE,2009-01-01,2009-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",2009,2009,USD,88.2070393822,X
+ZWE,2010-01-01,2010-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",2010,2010,USD,52.9655314405,X
+ZWE,2011-01-01,2011-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",2011,2011,USD,54.2716095074,X
+ZWE,2012-01-01,2012-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",2012,2012,USD,95.7286726878,X
+ZWE,2013-01-01,2013-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",2013,2013,USD,98.8269544052,X
+ZWE,2014-01-01,2014-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",2014,2014,USD,103.6323919513,X
+ZWE,2015-01-01,2015-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",2015,2015,USD,100.0000000000,X
+ZWE,2016-01-01,2016-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",2016,2016,USD,99.8458496662,X
+ZWE,2017-01-01,2017-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",2017,2017,USD,127.8833985505,X
+ZWE,2018-01-01,2018-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",2018,2018,USD,131.9510023060,X
+ZWE,2019-01-01,2019-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",2019,2019,USD,146.9795999499,X
+ZWE,2020-01-01,2020-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",2020,2020,USD,190.8346251412,X
+ZWE,2021-01-01,2021-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",2021,2021,USD,166.4142992412,X
+ZWE,2022-01-01,2022-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",2022,2022,USD,297.0544682515,X
+ZWE,2023-01-01,2023-12-31,181,'716,Zimbabwe,22028,Value Added Deflator (Manufacturing),6179,"Value US$, 2015 prices",2023,2023,USD,267.2879551237,X
