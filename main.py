@@ -6,10 +6,10 @@ from typing import List
 
 app = FastAPI(title="eHarvest AI API", description="API for eHarvest AI services", version="1.0.0")
 
-dynamic_pricing_model = joblib.load('dynamic_pricing_model.pkl')
-model_columns = joblib.load('model_columns.pkl')
-forecast_model = joblib.load('demand_forecast_model.pkl')
-commodity_cols = joblib.load('forecast_features.pkl')
+dynamic_pricing_model = joblib.load('ai_training/dynamic_pricing_model.pkl')
+model_columns = joblib.load('ai_training/model_columns.pkl')
+forecast_model = joblib.load('ai_training/demand_forecast_model.pkl')
+commodity_cols = joblib.load('ai_training/forecast_features.pkl')
 
 #['commodity', 'market', 'category', 'unit', 'month', 'latitude', 'longitude', 'currency', 'priceflag']
 class PricePredictionRequest(BaseModel):
@@ -70,4 +70,4 @@ def health_check():
 
 @app.get("/")
 def read_root():
-    return {"message": "API is running. Use /predict-price for price predictions and /forecast/{commodity} for demand forecasts."}
+    return {"message": "API is running. Use /predict-price for price predictions and /forecast/commodity for demand forecasts."}
