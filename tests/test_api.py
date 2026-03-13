@@ -211,3 +211,13 @@ def test_prescriptive_recommendations():
     body = resp.json()
     assert body["region"] == "Manicaland"
     assert len(body["recommendations"]) == 2
+
+
+def test_trust_score_placeholder():
+    resp = client.get("/trust-score/user-123")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["user_id"] == "user-123"
+    assert body["scale"] == 5
+    assert 1.0 <= body["trust_score"] <= 5.0
+    assert body["review_count"] >= 0
