@@ -1,15 +1,44 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
+from fastapi.middleware.cors import CORSMiddleware
 import httpx
 import joblib
 import os
 import pandas as pd
 from pydantic import BaseModel
-from typing import List, Optional, Dict, Any, Tuple
+from typing import List, Optional, Dict, Any, Tuple, Iterable
 from datetime import UTC, datetime, timedelta
 import numpy as np
+import math
 
 app = FastAPI(title="eHarvest AI API",
               description="API for eHarvest AI services", version="1.0.0")
+
+CORS_ALLOW_ORIGINS = os.getenv("CORS_ALLOW_ORIGINS", "*").strip()
+CORS_ALLOW_CREDENTIALS = os.getenv("CORS_ALLOW_CREDENTIALS", "false").strip().lower()
+
+
+def _parse_cors_origins(raw_value: str) -> List[str]:
+    if not raw_value:
+        return ["*"]
+    value = raw_value.strip()
+    if value == "*":
+        return ["*"]
+    return [item.strip() for item in value.split(",") if item.strip()]
+
+
+cors_origins = _parse_cors_origins(CORS_ALLOW_ORIGINS)
+allow_credentials = CORS_ALLOW_CREDENTIALS in ("1", "true", "yes")
+
+if cors_origins == ["*"]:
+    allow_credentials = False
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=cors_origins,
+    allow_credentials=allow_credentials,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 dynamic_pricing_model = joblib.load('ai_training/dynamic_pricing_model.pkl')
 model_columns = joblib.load('ai_training/model_columns.pkl')
@@ -89,6 +118,9 @@ class DemandSupplyForecastRequest(BaseModel):
     market_data: Optional[List[MarketEntry]] = None
     supply_multiplier: float = 1.05
     commodities: Optional[List[str]] = None
+    auto_fetch_external: bool = False
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
 
 
 class ClimateSnapshot(BaseModel):
@@ -110,6 +142,82 @@ class PrescriptiveRecommendationRequest(BaseModel):
     demand_forecast: Optional[List[DemandSignal]] = None
     market_data: Optional[List[MarketEntry]] = None
     top_n: int = 3
+    auto_fetch_external: bool = False
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
+
+
+class AutoPricingRequest(PricePredictionRequest):
+    use_live_signals: bool = True
+    demand_signal: Optional[float] = None
+    supply_volume: Optional[float] = None
+    searches: Optional[int] = None
+    carts: Optional[int] = None
+    orders: Optional[int] = None
+    active_listings: Optional[int] = None
+    signal_window_days: int = 30
+    max_adjustment: float = 0.3
+
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "commodity": "maize",
+                    "market": "harare",
+                    "category": "cereals",
+                    "unit": "KG",
+                    "month": 11,
+                    "latitude": -17.8,
+                    "longitude": 31.0,
+                    "currency": "USD",
+                    "priceflag": "actual",
+                    "use_live_signals": True,
+                    "signal_window_days": 30,
+                    "max_adjustment": 0.3,
+                }
+            ]
+        }
+    }
+
+
+class LogisticsMatchRequest(BaseModel):
+    request_id: Optional[str] = None
+    logistics_request: Optional[Dict[str, Any]] = None
+    providers: Optional[List[Dict[str, Any]]] = None
+    top_n: int = 3
+    max_distance_km: Optional[float] = None
+    weights: Optional[Dict[str, float]] = None
+
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "request_id": "123",
+                    "top_n": 3,
+                    "weights": {"cost": 0.4, "distance": 0.4, "capacity": 0.2},
+                },
+                {
+                    "logistics_request": {
+                        "origin_lat": -17.8,
+                        "origin_lon": 31.0,
+                        "destination_lat": -18.2,
+                        "destination_lon": 31.6,
+                        "quantity": 5,
+                    },
+                    "providers": [
+                        {
+                            "id": "prov-1",
+                            "latitude": -17.9,
+                            "longitude": 31.1,
+                            "cost_per_km": 0.8,
+                            "capacity": 8,
+                        }
+                    ],
+                    "top_n": 2,
+                },
+            ]
+        }
+    }
 
 
 @app.post("/predict-price")
@@ -188,6 +296,67 @@ async def predict_price_batch(request: BatchPricePredictionRequest):
         "status": "success",
         "count": len(results),
         "predictions": results
+    }
+
+
+@app.post("/pricing/auto")
+async def auto_pricing(request: AutoPricingRequest):
+    input_data = pd.DataFrame([request.model_dump()])
+    input_encoded = pd.get_dummies(input_data)
+    final_input = input_encoded.reindex(columns=model_columns, fill_value=0)
+    prediction = dynamic_pricing_model.predict(final_input)
+    base_price = round(float(prediction[0]), 2)
+
+    warnings: List[str] = []
+    sources: List[str] = []
+
+    demand_signal = request.demand_signal
+    supply_volume = request.supply_volume
+
+    platform_signals: Dict[str, float] = {}
+    if request.use_live_signals:
+        platform_signals, platform_warnings = await _resolve_platform_signals(
+            request.commodity, max(1, request.signal_window_days)
+        )
+        if platform_warnings:
+            warnings.extend(platform_warnings)
+        sources.append("platform_api")
+
+    if demand_signal is None:
+        if platform_signals:
+            demand_signal = platform_signals.get("demand_qty") or platform_signals.get("demand_count")
+    if supply_volume is None:
+        if platform_signals:
+            supply_volume = platform_signals.get("supply_qty") or platform_signals.get("supply_count")
+
+    if request.searches:
+        demand_signal = (demand_signal or 0.0) + float(request.searches)
+    if request.carts:
+        demand_signal = (demand_signal or 0.0) + float(request.carts)
+    if request.orders:
+        demand_signal = (demand_signal or 0.0) + float(request.orders)
+
+    if request.active_listings:
+        supply_volume = (supply_volume or 0.0) + float(request.active_listings)
+
+    pressure = _compute_price_pressure(demand_signal, supply_volume)
+    max_adjustment = _clamp(request.max_adjustment, 0.0, 1.0)
+    adjustment = pressure * max_adjustment
+    adjusted_price = round(base_price * (1 + adjustment), 2)
+
+    return {
+        "status": "success",
+        "base_price": base_price,
+        "suggested_price": adjusted_price,
+        "currency": request.currency,
+        "adjustment_pct": round(adjustment * 100, 2),
+        "signals": {
+            "demand_signal": demand_signal,
+            "supply_volume": supply_volume,
+            "platform_signals": platform_signals,
+        },
+        "sources": sources,
+        "warnings": warnings,
     }
 
 
@@ -274,6 +443,14 @@ SPRING_BOOT_REVIEWS_PATH = os.getenv(
     "SPRING_BOOT_REVIEWS_PATH", "/api/reviews/user/{user_id}")
 USE_REVIEW_PLACEHOLDER = os.getenv(
     "USE_REVIEW_PLACEHOLDER", "true").lower() in ("1", "true", "yes")
+PLATFORM_API_BASE_URL = os.getenv(
+    "PLATFORM_API_BASE_URL", "http://localhost:8080").rstrip("/")
+PLATFORM_API_KEY = os.getenv(
+    "PLATFORM_API_KEY", "eharvest-ai-secret-key-12345")
+PLATFORM_API_TIMEOUT = float(os.getenv("PLATFORM_API_TIMEOUT", "6"))
+WEATHER_API_URL = os.getenv(
+    "WEATHER_API_URL", "https://api.open-meteo.com/v1/forecast").strip()
+MARKET_DATA_API_URL = os.getenv("MARKET_DATA_API_URL", "").strip()
 
 
 def _season_from_month(month: int) -> str:
@@ -303,6 +480,436 @@ def _coerce_bool(value: Any) -> Optional[bool]:
     if isinstance(value, (int, float)):
         return value != 0
     return None
+
+
+def _coerce_float(value: Any) -> Optional[float]:
+    if value is None:
+        return None
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _coerce_int(value: Any) -> Optional[int]:
+    if value is None:
+        return None
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _extract_list_payload(data: Any) -> List[Dict[str, Any]]:
+    if isinstance(data, list):
+        return [item for item in data if isinstance(item, dict)]
+    if isinstance(data, dict):
+        for key in ("content", "items", "data", "results", "records", "rows"):
+            value = data.get(key)
+            if isinstance(value, list):
+                return [item for item in value if isinstance(item, dict)]
+    return []
+
+
+def _get_first_present(payload: Dict[str, Any], keys: Iterable[str]) -> Any:
+    if not isinstance(payload, dict):
+        return None
+    for key in keys:
+        if key in payload and payload[key] is not None:
+            return payload[key]
+    return None
+
+
+def _get_nested_dict(payload: Dict[str, Any], keys: Iterable[str]) -> Optional[Dict[str, Any]]:
+    if not isinstance(payload, dict):
+        return None
+    for key in keys:
+        value = payload.get(key)
+        if isinstance(value, dict):
+            return value
+    return None
+
+
+def _parse_date(value: Any) -> Optional[datetime]:
+    if value is None:
+        return None
+    try:
+        parsed = pd.to_datetime(value, errors="coerce", utc=True)
+    except Exception:
+        return None
+    if pd.isna(parsed):
+        return None
+    if isinstance(parsed, pd.Timestamp):
+        return parsed.to_pydatetime()
+    return None
+
+
+def _within_days(date_value: Optional[datetime], days: int) -> bool:
+    if date_value is None:
+        return True
+    try:
+        cutoff = datetime.now(UTC) - timedelta(days=days)
+    except Exception:
+        return True
+    if date_value.tzinfo is None:
+        date_value = date_value.replace(tzinfo=UTC)
+    return date_value >= cutoff
+
+
+def _extract_commodity(item: Dict[str, Any]) -> Optional[str]:
+    if not isinstance(item, dict):
+        return None
+    direct = _get_first_present(item, (
+        "commodity",
+        "produce",
+        "product",
+        "item",
+        "name",
+        "produceName",
+        "productName",
+        "itemName",
+    ))
+    if isinstance(direct, str):
+        return direct
+    if isinstance(direct, dict):
+        nested_name = _get_first_present(direct, (
+            "commodity",
+            "name",
+            "produceName",
+            "productName",
+            "itemName",
+        ))
+        if isinstance(nested_name, str):
+            return nested_name
+    nested = _get_nested_dict(item, ("produce", "product", "item"))
+    if isinstance(nested, dict):
+        nested_name = _get_first_present(nested, (
+            "commodity",
+            "name",
+            "produceName",
+            "productName",
+            "itemName",
+        ))
+        if isinstance(nested_name, str):
+            return nested_name
+    return None
+
+
+def _extract_quantity(item: Dict[str, Any]) -> Optional[float]:
+    if not isinstance(item, dict):
+        return None
+    value = _get_first_present(item, (
+        "quantity",
+        "qty",
+        "amount",
+        "volume",
+        "weight",
+        "units",
+    ))
+    return _coerce_float(value)
+
+
+def _extract_cost(item: Dict[str, Any]) -> Optional[float]:
+    if not isinstance(item, dict):
+        return None
+    value = _get_first_present(item, (
+        "cost",
+        "price",
+        "rate",
+        "price_per_km",
+        "cost_per_km",
+        "costPerKm",
+        "ratePerKm",
+        "basePrice",
+        "base_fee",
+    ))
+    return _coerce_float(value)
+
+
+def _extract_date(item: Dict[str, Any]) -> Optional[datetime]:
+    if not isinstance(item, dict):
+        return None
+    value = _get_first_present(item, (
+        "created_at",
+        "createdAt",
+        "date",
+        "orderDate",
+        "requestedAt",
+        "updated_at",
+        "updatedAt",
+    ))
+    return _parse_date(value)
+
+
+def _extract_lat_lon(payload: Dict[str, Any], lat_keys: Iterable[str], lon_keys: Iterable[str]) -> Tuple[Optional[float], Optional[float]]:
+    if not isinstance(payload, dict):
+        return None, None
+    for lat_key in lat_keys:
+        if lat_key in payload:
+            lat_val = _coerce_float(payload.get(lat_key))
+            if lat_val is None:
+                continue
+            for lon_key in lon_keys:
+                if lon_key in payload:
+                    lon_val = _coerce_float(payload.get(lon_key))
+                    if lon_val is not None:
+                        return lat_val, lon_val
+    return None, None
+
+
+def _haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
+    radius = 6371.0
+    lat1_rad = math.radians(lat1)
+    lat2_rad = math.radians(lat2)
+    delta_lat = math.radians(lat2 - lat1)
+    delta_lon = math.radians(lon2 - lon1)
+    a = math.sin(delta_lat / 2) ** 2 + math.cos(lat1_rad) * math.cos(lat2_rad) * math.sin(delta_lon / 2) ** 2
+    c = 2 * math.asin(math.sqrt(a))
+    return radius * c
+
+
+def _normalize_inverse(value: Optional[float], min_value: float, max_value: float) -> Optional[float]:
+    if value is None:
+        return None
+    if max_value <= min_value:
+        return 1.0
+    scaled = (value - min_value) / (max_value - min_value)
+    return _clamp(1.0 - scaled, 0.0, 1.0)
+
+
+def _extract_location(payload: Dict[str, Any], lat_keys: Iterable[str], lon_keys: Iterable[str], nested_keys: Iterable[str]) -> Tuple[Optional[float], Optional[float]]:
+    lat, lon = _extract_lat_lon(payload, lat_keys, lon_keys)
+    if lat is not None and lon is not None:
+        return lat, lon
+    nested = _get_nested_dict(payload, nested_keys)
+    if isinstance(nested, dict):
+        lat, lon = _extract_lat_lon(nested, lat_keys, lon_keys)
+        if lat is not None and lon is not None:
+            return lat, lon
+    return None, None
+
+
+def _extract_origin_destination(payload: Dict[str, Any]) -> Tuple[Tuple[Optional[float], Optional[float]], Tuple[Optional[float], Optional[float]]]:
+    origin_lat_keys = (
+        "origin_lat", "pickup_lat", "from_lat", "source_lat", "start_lat",
+        "originLatitude", "pickupLatitude",
+    )
+    origin_lon_keys = (
+        "origin_lon", "origin_lng", "pickup_lon", "pickup_lng", "from_lon", "from_lng",
+        "source_lon", "source_lng", "start_lon", "start_lng",
+        "originLongitude", "pickupLongitude",
+    )
+    dest_lat_keys = (
+        "destination_lat", "dropoff_lat", "to_lat", "end_lat", "delivery_lat",
+        "destinationLatitude", "dropoffLatitude",
+    )
+    dest_lon_keys = (
+        "destination_lon", "destination_lng", "dropoff_lon", "dropoff_lng", "to_lon", "to_lng",
+        "end_lon", "end_lng", "delivery_lon", "delivery_lng",
+        "destinationLongitude", "dropoffLongitude",
+    )
+    origin = _extract_location(payload, origin_lat_keys, origin_lon_keys, ("origin", "pickup", "from", "source", "start", "location"))
+    destination = _extract_location(payload, dest_lat_keys, dest_lon_keys, ("destination", "dropoff", "to", "end"))
+    return origin, destination
+
+
+def _extract_provider_location(payload: Dict[str, Any]) -> Tuple[Optional[float], Optional[float]]:
+    lat_keys = ("latitude", "lat", "current_lat", "currentLat", "base_lat", "baseLat")
+    lon_keys = ("longitude", "lon", "lng", "current_lon", "current_lng", "currentLng", "base_lon", "base_lng", "baseLng")
+    return _extract_location(payload, lat_keys, lon_keys, ("location", "currentLocation", "baseLocation"))
+
+
+def _extract_capacity(payload: Dict[str, Any]) -> Optional[float]:
+    return _coerce_float(_get_first_present(payload, ("capacity", "maxLoad", "max_capacity", "maxCapacity")))
+
+
+def _extract_rate_per_km(payload: Dict[str, Any]) -> Optional[float]:
+    return _coerce_float(_get_first_present(payload, ("rate_per_km", "price_per_km", "cost_per_km", "ratePerKm", "costPerKm")))
+
+
+def _availability_flag(payload: Dict[str, Any]) -> Optional[bool]:
+    flag = _coerce_bool(_get_first_present(payload, ("available", "isAvailable", "active", "enabled")))
+    if flag is not None:
+        return flag
+    status = _get_first_present(payload, ("status", "state"))
+    if isinstance(status, str):
+        return status.strip().lower() in ("available", "active", "online", "ready")
+    return None
+
+
+def _compute_price_pressure(demand: Optional[float], supply: Optional[float]) -> float:
+    demand_value = demand or 0.0
+    supply_value = supply or 0.0
+    denom = abs(demand_value) + abs(supply_value) + 1.0
+    pressure = (demand_value - supply_value) / denom
+    return _clamp(pressure, -1.0, 1.0)
+
+
+async def _resolve_platform_signals(commodity: str, window_days: int) -> Tuple[Dict[str, float], List[str]]:
+    warnings: List[str] = []
+    order_items, warn_items = await _fetch_platform_list("/api/v1/order_items")
+    if warn_items:
+        warnings.append(warn_items)
+    orders, warn_orders = await _fetch_platform_list("/api/v1/orders")
+    if warn_orders:
+        warnings.append(warn_orders)
+    produce, warn_produce = await _fetch_platform_list("/api/v1/produce")
+    if warn_produce:
+        warnings.append(warn_produce)
+
+    demand_count = 0
+    demand_qty = 0.0
+    for item in order_items:
+        if commodity and not _match_commodity(item, commodity):
+            continue
+        if not _within_days(_extract_date(item), window_days):
+            continue
+        qty = _extract_quantity(item)
+        demand_qty += qty if qty is not None else 1.0
+        demand_count += 1
+
+    if demand_count == 0:
+        for order in orders:
+            if not _within_days(_extract_date(order), window_days):
+                continue
+            demand_count += 1
+
+    supply_count = 0
+    supply_qty = 0.0
+    for item in produce:
+        if commodity and not _match_commodity(item, commodity):
+            continue
+        status = _get_first_present(item, ("status", "state"))
+        if isinstance(status, str) and status.strip().lower() in ("inactive", "archived", "sold"):
+            continue
+        qty = _extract_quantity(item)
+        supply_qty += qty if qty is not None else 1.0
+        supply_count += 1
+
+    return {
+        "demand_count": float(demand_count),
+        "demand_qty": float(demand_qty),
+        "supply_count": float(supply_count),
+        "supply_qty": float(supply_qty),
+    }, warnings
+
+
+def _score_logistics_candidates(
+    request_payload: Dict[str, Any],
+    providers: List[Dict[str, Any]],
+    weights: Optional[Dict[str, float]] = None,
+    max_distance_km: Optional[float] = None,
+) -> Dict[str, Any]:
+    weights = weights or {}
+    weight_cost = float(weights.get("cost", 0.4))
+    weight_distance = float(weights.get("distance", 0.4))
+    weight_capacity = float(weights.get("capacity", 0.2))
+
+    origin, destination = _extract_origin_destination(request_payload)
+    route_distance = None
+    if origin[0] is not None and destination[0] is not None:
+        route_distance = _haversine_km(origin[0], origin[1], destination[0], destination[1])
+
+    demand_qty = _extract_quantity(request_payload) or _coerce_float(
+        _get_first_present(request_payload, ("weight", "load", "volume"))
+    )
+
+    scored: List[Dict[str, Any]] = []
+    rejected: List[Dict[str, Any]] = []
+    distances: List[float] = []
+    costs: List[float] = []
+
+    for provider in providers:
+        provider_location = _extract_provider_location(provider)
+        pickup_distance = None
+        if origin[0] is not None and provider_location[0] is not None:
+            pickup_distance = _haversine_km(origin[0], origin[1], provider_location[0], provider_location[1])
+
+        if max_distance_km is not None and pickup_distance is not None:
+            if pickup_distance > max_distance_km:
+                rejected.append({
+                    "provider": provider,
+                    "reason": "pickup_distance_exceeds_max",
+                    "pickup_distance_km": round(pickup_distance, 2),
+                })
+                continue
+
+        base_cost = _extract_cost(provider)
+        rate_per_km = _extract_rate_per_km(provider)
+        distance_for_cost = route_distance or pickup_distance or 0.0
+        estimated_cost = None
+        if base_cost is not None or rate_per_km is not None:
+            estimated_cost = (base_cost or 0.0) + (rate_per_km or 0.0) * distance_for_cost
+
+        capacity = _extract_capacity(provider)
+        capacity_score = None
+        if capacity is not None and demand_qty is not None:
+            capacity_score = 1.0 if capacity >= demand_qty else 0.4
+        elif capacity is not None:
+            capacity_score = 0.8
+
+        availability = _availability_flag(provider)
+        availability_penalty = 1.0
+        if availability is False:
+            availability_penalty = 0.6
+
+        if pickup_distance is not None:
+            distances.append(pickup_distance)
+        if estimated_cost is not None:
+            costs.append(estimated_cost)
+
+        scored.append({
+            "provider": provider,
+            "pickup_distance_km": pickup_distance,
+            "route_distance_km": route_distance,
+            "estimated_cost": estimated_cost,
+            "capacity_score": capacity_score,
+            "availability_penalty": availability_penalty,
+        })
+
+    min_distance = min(distances) if distances else 0.0
+    max_distance = max(distances) if distances else 0.0
+    min_cost = min(costs) if costs else 0.0
+    max_cost = max(costs) if costs else 0.0
+
+    results: List[Dict[str, Any]] = []
+    for item in scored:
+        distance_score = _normalize_inverse(item["pickup_distance_km"], min_distance, max_distance)
+        cost_score = _normalize_inverse(item["estimated_cost"], min_cost, max_cost)
+        capacity_score = item["capacity_score"]
+
+        total_weight = 0.0
+        score = 0.0
+        if distance_score is not None:
+            score += weight_distance * distance_score
+            total_weight += weight_distance
+        if cost_score is not None:
+            score += weight_cost * cost_score
+            total_weight += weight_cost
+        if capacity_score is not None:
+            score += weight_capacity * capacity_score
+            total_weight += weight_capacity
+        if total_weight > 0:
+            score = score / total_weight
+
+        score *= item["availability_penalty"]
+
+        results.append({
+            "provider": item["provider"],
+            "score": round(score, 4),
+            "pickup_distance_km": None if item["pickup_distance_km"] is None else round(item["pickup_distance_km"], 2),
+            "route_distance_km": None if item["route_distance_km"] is None else round(item["route_distance_km"], 2),
+            "estimated_cost": None if item["estimated_cost"] is None else round(item["estimated_cost"], 2),
+            "capacity_score": item["capacity_score"],
+            "availability_penalty": item["availability_penalty"],
+        })
+
+    results = sorted(results, key=lambda x: x["score"], reverse=True)
+    return {
+        "route_distance_km": None if route_distance is None else round(route_distance, 2),
+        "matches": results,
+        "rejected": rejected,
+    }
 
 
 _VADER_ANALYZER = None
@@ -539,6 +1146,143 @@ async def _fetch_user_reviews(user_id: str) -> Tuple[List[ReviewEntry], str, Opt
     return reviews, "spring_boot", None
 
 
+def _platform_headers() -> Dict[str, str]:
+    headers: Dict[str, str] = {}
+    if PLATFORM_API_KEY:
+        headers["X-API-KEY"] = PLATFORM_API_KEY
+    return headers
+
+
+async def _platform_get(path: str, params: Optional[Dict[str, Any]] = None) -> Tuple[Optional[Any], Optional[str]]:
+    if not PLATFORM_API_BASE_URL:
+        return None, "platform_base_url_not_set"
+    if not path.startswith("/"):
+        path = f"/{path}"
+    url = f"{PLATFORM_API_BASE_URL}{path}"
+    try:
+        async with httpx.AsyncClient(timeout=PLATFORM_API_TIMEOUT) as client:
+            resp = await client.get(url, params=params, headers=_platform_headers())
+            resp.raise_for_status()
+        return resp.json(), None
+    except httpx.HTTPError as exc:
+        return None, f"platform_api_error: {exc.__class__.__name__}"
+
+
+async def _fetch_platform_list(path: str, params: Optional[Dict[str, Any]] = None) -> Tuple[List[Dict[str, Any]], Optional[str]]:
+    data, warning = await _platform_get(path, params=params)
+    if data is None:
+        return [], warning
+    return _extract_list_payload(data), warning
+
+
+def _match_commodity(item: Dict[str, Any], commodity: str) -> bool:
+    if not commodity:
+        return False
+    found = _extract_commodity(item)
+    if not found:
+        return False
+    return commodity.strip().lower() in found.strip().lower()
+
+
+async def _fetch_platform_market_prices(
+    region: Optional[str],
+    commodity: Optional[str] = None,
+) -> Tuple[List[Dict[str, Any]], str, Optional[str]]:
+    items, warning = await _fetch_platform_list("/api/v1/produce")
+    results: List[Dict[str, Any]] = []
+    for item in items:
+        name = _extract_commodity(item)
+        if not name:
+            continue
+        if commodity and commodity.lower() not in name.lower():
+            continue
+        price = _extract_cost(item)
+        if price is None:
+            continue
+        market = _get_first_present(item, ("market", "location", "city", "town"))
+        region_value = _get_first_present(item, ("region", "province", "admin1"))
+        if region and isinstance(region_value, str):
+            if region.lower() != region_value.lower():
+                continue
+        date_value = _extract_date(item) or datetime.now(UTC)
+        results.append({
+            "date": date_value.strftime("%Y-%m-%d"),
+            "commodity": name,
+            "price": float(price),
+            "market": market,
+            "region": region_value,
+        })
+    return results, "platform_produce", warning
+
+
+async def _fetch_external_market_prices(
+    region: Optional[str],
+    commodity: Optional[str] = None,
+) -> Tuple[List[Dict[str, Any]], str, Optional[str]]:
+    if not MARKET_DATA_API_URL:
+        return [], "not_configured", "market_data_api_url_not_set"
+    try:
+        async with httpx.AsyncClient(timeout=PLATFORM_API_TIMEOUT) as client:
+            resp = await client.get(MARKET_DATA_API_URL, params={"region": region, "commodity": commodity})
+            resp.raise_for_status()
+        data = resp.json()
+    except httpx.HTTPError as exc:
+        return [], "external_market_api", f"external_market_error: {exc.__class__.__name__}"
+
+    items = _extract_list_payload(data)
+    results: List[Dict[str, Any]] = []
+    for item in items:
+        name = _extract_commodity(item) or commodity
+        price = _extract_cost(item)
+        if name is None or price is None:
+            continue
+        date_value = _extract_date(item) or datetime.now(UTC)
+        results.append({
+            "date": date_value.strftime("%Y-%m-%d"),
+            "commodity": name,
+            "price": float(price),
+            "market": _get_first_present(item, ("market", "location", "city")),
+            "region": _get_first_present(item, ("region", "province", "admin1")),
+        })
+    return results, "external_market_api", None
+
+
+async def _fetch_weather_open_meteo(
+    latitude: float,
+    longitude: float,
+    days: int = 7,
+) -> Tuple[List[Dict[str, Any]], str, Optional[str]]:
+    if not WEATHER_API_URL:
+        return [], "not_configured", "weather_api_url_not_set"
+    params = {
+        "latitude": latitude,
+        "longitude": longitude,
+        "daily": "temperature_2m_mean,precipitation_sum",
+        "forecast_days": max(1, min(days, 14)),
+        "timezone": "UTC",
+    }
+    try:
+        async with httpx.AsyncClient(timeout=PLATFORM_API_TIMEOUT) as client:
+            resp = await client.get(WEATHER_API_URL, params=params)
+            resp.raise_for_status()
+        data = resp.json()
+    except httpx.HTTPError as exc:
+        return [], "open_meteo", f"weather_api_error: {exc.__class__.__name__}"
+
+    daily = data.get("daily", {}) if isinstance(data, dict) else {}
+    dates = daily.get("time") or []
+    temps = daily.get("temperature_2m_mean") or []
+    rains = daily.get("precipitation_sum") or []
+    results: List[Dict[str, Any]] = []
+    for idx, date_str in enumerate(dates):
+        results.append({
+            "date": date_str,
+            "rainfall_mm": rains[idx] if idx < len(rains) else None,
+            "temperature_c": temps[idx] if idx < len(temps) else None,
+        })
+    return results, "open_meteo", None
+
+
 def _apply_region_filter(df: pd.DataFrame, region: str) -> pd.DataFrame:
     if df is None or df.empty or "region" not in df.columns:
         return df
@@ -631,6 +1375,9 @@ async def demand_supply_forecast(request: DemandSupplyForecastRequest):
         raise HTTPException(
             status_code=400, detail="periods must be greater than 0")
 
+    warnings: List[str] = []
+    sources: List[str] = []
+
     sales_df = pd.DataFrame([item.model_dump()
                             for item in request.historical_sales])
     if sales_df.empty:
@@ -658,6 +1405,37 @@ async def demand_supply_forecast(request: DemandSupplyForecastRequest):
         market_df = pd.DataFrame([item.model_dump()
                                  for item in request.market_data])
         market_df = _apply_region_filter(market_df, request.region)
+
+    if request.auto_fetch_external:
+        if (weather_df is None or weather_df.empty) and request.latitude is not None and request.longitude is not None:
+            weather_payload, weather_source, warning = await _fetch_weather_open_meteo(
+                request.latitude, request.longitude, days=max(request.periods, 7)
+            )
+            if weather_payload:
+                weather_df = pd.DataFrame(weather_payload)
+                sources.append(weather_source)
+            if warning:
+                warnings.append(warning)
+
+        if market_df is None or market_df.empty:
+            market_payload, market_source, warning = await _fetch_platform_market_prices(
+                request.region
+            )
+            if market_payload:
+                market_df = pd.DataFrame(market_payload)
+                sources.append(market_source)
+            if warning:
+                warnings.append(warning)
+
+            if market_df is None or market_df.empty:
+                external_payload, external_source, warning = await _fetch_external_market_prices(
+                    request.region
+                )
+                if external_payload:
+                    market_df = pd.DataFrame(external_payload)
+                    sources.append(external_source)
+                if warning:
+                    warnings.append(warning)
 
     commodities = request.commodities or sorted(
         sales_df["commodity"].dropna().unique().tolist())
@@ -736,6 +1514,8 @@ async def demand_supply_forecast(request: DemandSupplyForecastRequest):
             "series": visual_series,
             "notes": "visual data only; frontend renders charts"
         },
+        "sources": sources,
+        "warnings": warnings,
         "assumptions": [
             "seasonal averages and recent trend are used for forecasting",
             "weather and market impacts are applied as bounded adjustments",
@@ -749,6 +1529,9 @@ async def prescriptive_recommendations(request: PrescriptiveRecommendationReques
     if request.top_n <= 0:
         raise HTTPException(
             status_code=400, detail="top_n must be greater than 0")
+
+    warnings: List[str] = []
+    sources: List[str] = []
 
     target_month = request.month or datetime.now(UTC).month
     season = request.season or _season_from_month(target_month)
@@ -764,6 +1547,41 @@ async def prescriptive_recommendations(request: PrescriptiveRecommendationReques
         market_df = pd.DataFrame([item.model_dump()
                                  for item in request.market_data])
         market_df = _apply_region_filter(market_df, request.region)
+
+    if request.auto_fetch_external:
+        if (climate_rain is None or climate_temp is None) and request.latitude is not None and request.longitude is not None:
+            weather_payload, weather_source, warning = await _fetch_weather_open_meteo(
+                request.latitude, request.longitude, days=14
+            )
+            if weather_payload:
+                weather_df = pd.DataFrame(weather_payload)
+                if climate_rain is None:
+                    climate_rain = _safe_mean(weather_df.get("rainfall_mm"))
+                if climate_temp is None:
+                    climate_temp = _safe_mean(weather_df.get("temperature_c"))
+                sources.append(weather_source)
+            if warning:
+                warnings.append(warning)
+
+        if market_df is None or market_df.empty:
+            market_payload, market_source, warning = await _fetch_platform_market_prices(
+                request.region
+            )
+            if market_payload:
+                market_df = pd.DataFrame(market_payload)
+                sources.append(market_source)
+            if warning:
+                warnings.append(warning)
+
+            if market_df is None or market_df.empty:
+                external_payload, external_source, warning = await _fetch_external_market_prices(
+                    request.region
+                )
+                if external_payload:
+                    market_df = pd.DataFrame(external_payload)
+                    sources.append(external_source)
+                if warning:
+                    warnings.append(warning)
 
     scored = []
     for crop, profile in CROP_PROFILES.items():
@@ -828,12 +1646,120 @@ async def prescriptive_recommendations(request: PrescriptiveRecommendationReques
         "season": season,
         "generated_at": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "recommendations": recommendations,
+        "sources": sources,
+        "warnings": warnings,
         "assumptions": [
             "crop profiles reflect typical Zimbabwe growing ranges",
             "budget score uses a rough cost-per-hectare estimate",
             "market targets use average prices in provided market_data"
         ]
     }
+
+
+@app.post("/logistics/match")
+async def logistics_match(request: LogisticsMatchRequest):
+    warnings: List[str] = []
+    sources: List[str] = []
+
+    logistics_request = request.logistics_request
+    if logistics_request is None and request.request_id:
+        data, warning = await _platform_get(f"/api/v1/logistics/{request.request_id}")
+        if data is not None:
+            logistics_request = data if isinstance(data, dict) else None
+            sources.append("platform_logistics")
+        if warning:
+            warnings.append(warning)
+
+    providers = request.providers
+    if not providers:
+        providers, warning = await _fetch_platform_list("/api/v1/logistics-providers")
+        if warning:
+            warnings.append(warning)
+        if providers:
+            sources.append("platform_logistics_providers")
+
+    if not logistics_request:
+        raise HTTPException(status_code=400, detail="logistics_request or request_id is required")
+    if not providers:
+        raise HTTPException(status_code=400, detail="no logistics providers available for matching")
+
+    result = _score_logistics_candidates(
+        logistics_request,
+        providers,
+        weights=request.weights,
+        max_distance_km=request.max_distance_km,
+    )
+    result["matches"] = result["matches"][: max(1, request.top_n)]
+
+    return {
+        "request": logistics_request,
+        "route_distance_km": result["route_distance_km"],
+        "matches": result["matches"],
+        "rejected": result["rejected"],
+        "sources": sources,
+        "warnings": warnings,
+    }
+
+
+@app.get("/integrations/weather")
+async def integrations_weather(
+    latitude: float = Query(
+        ...,
+        examples={"default": {"value": -17.8}},
+        description="Latitude in decimal degrees",
+    ),
+    longitude: float = Query(
+        ...,
+        examples={"default": {"value": 31.0}},
+        description="Longitude in decimal degrees",
+    ),
+    days: int = Query(
+        7,
+        examples={"default": {"value": 7}},
+        ge=1,
+        le=14,
+        description="Number of forecast days (1-14)",
+    ),
+):
+    weather_payload, source, warning = await _fetch_weather_open_meteo(latitude, longitude, days=days)
+    response = {
+        "source": source,
+        "weather": weather_payload,
+    }
+    if warning:
+        response["warnings"] = [warning]
+    return response
+
+
+@app.get("/integrations/market-prices")
+async def integrations_market_prices(
+    region: Optional[str] = Query(None, examples={"default": {"value": "Manicaland"}}),
+    commodity: Optional[str] = Query(None, examples={"default": {"value": "maize"}}),
+):
+    warnings: List[str] = []
+    sources: List[str] = []
+
+    market_payload, market_source, warning = await _fetch_platform_market_prices(region, commodity)
+    if market_payload:
+        sources.append(market_source)
+    if warning:
+        warnings.append(warning)
+
+    if not market_payload:
+        external_payload, external_source, warning = await _fetch_external_market_prices(region, commodity)
+        if external_payload:
+            market_payload = external_payload
+            sources.append(external_source)
+        if warning:
+            warnings.append(warning)
+
+    response = {
+        "sources": sources,
+        "market_prices": market_payload,
+    }
+    if warnings:
+        response["warnings"] = warnings
+    return response
 
 
 @app.get("/trust-score/{user_id}")

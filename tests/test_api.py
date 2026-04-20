@@ -221,3 +221,111 @@ def test_trust_score_placeholder():
     assert body["scale"] == 5
     assert 1.0 <= body["trust_score"] <= 5.0
     assert body["review_count"] >= 0
+
+
+def test_auto_pricing_without_live_signals():
+    payload = {
+        "commodity": "maize",
+        "market": "harare",
+        "category": "cereals",
+        "unit": "KG",
+        "month": 11,
+        "latitude": -17.8,
+        "longitude": 31.0,
+        "currency": "USD",
+        "priceflag": "actual",
+        "use_live_signals": False,
+        "demand_signal": 80,
+        "supply_volume": 40,
+    }
+    resp = client.post("/pricing/auto", json=payload)
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["status"] == "success"
+    assert body["suggested_price"] >= 0
+    assert "adjustment_pct" in body
+
+
+def test_auto_pricing_with_live_signals(monkeypatch):
+    async def _fake_signals(commodity, window_days):
+        return {
+            "demand_count": 10.0,
+            "demand_qty": 120.0,
+            "supply_count": 5.0,
+            "supply_qty": 60.0,
+        }, []
+
+    monkeypatch.setattr(main, "_resolve_platform_signals", _fake_signals)
+    payload = {
+        "commodity": "maize",
+        "market": "harare",
+        "category": "cereals",
+        "unit": "KG",
+        "month": 11,
+        "latitude": -17.8,
+        "longitude": 31.0,
+        "currency": "USD",
+        "priceflag": "actual",
+        "use_live_signals": True,
+        "signal_window_days": 30,
+        "max_adjustment": 0.2,
+    }
+    resp = client.post("/pricing/auto", json=payload)
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["signals"]["platform_signals"]["demand_qty"] == 120.0
+    assert body["sources"] == ["platform_api"]
+
+
+def test_logistics_match_with_payload():
+    payload = {
+        "logistics_request": {
+            "origin_lat": -17.8,
+            "origin_lon": 31.0,
+            "destination_lat": -18.2,
+            "destination_lon": 31.6,
+            "quantity": 5,
+        },
+        "providers": [
+            {"id": "prov-1", "latitude": -17.9, "longitude": 31.1, "cost_per_km": 0.8, "capacity": 8},
+            {"id": "prov-2", "latitude": -19.2, "longitude": 32.1, "cost_per_km": 0.5, "capacity": 3},
+        ],
+        "top_n": 2,
+    }
+    resp = client.post("/logistics/match", json=payload)
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["matches"]
+    assert len(body["matches"]) == 2
+
+
+def test_integrations_weather(monkeypatch):
+    async def _fake_weather(lat, lon, days=7):
+        return (
+            [{"date": "2026-03-01", "rainfall_mm": 10, "temperature_c": 24}],
+            "open_meteo",
+            None,
+        )
+
+    monkeypatch.setattr(main, "_fetch_weather_open_meteo", _fake_weather)
+    resp = client.get("/integrations/weather?latitude=-17.8&longitude=31.0&days=3")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["source"] == "open_meteo"
+    assert len(body["weather"]) == 1
+
+
+def test_integrations_market_prices(monkeypatch):
+    async def _fake_platform(region, commodity=None):
+        return ([{"date": "2026-03-01", "commodity": "maize", "price": 0.4, "market": "Harare"}], "platform", None)
+
+    async def _fake_external(region, commodity=None):
+        return ([], "external", None)
+
+    monkeypatch.setattr(main, "_fetch_platform_market_prices", _fake_platform)
+    monkeypatch.setattr(main, "_fetch_external_market_prices", _fake_external)
+    resp = client.get("/integrations/market-prices?region=Manicaland&commodity=maize")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["sources"] == ["platform"]
+    assert len(body["market_prices"]) == 1

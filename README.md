@@ -54,11 +54,19 @@ These control the trust score integration with a Spring Boot reviews service.
 - `SPRING_BOOT_REVIEWS_PATH`: Reviews endpoint path. Default: `/api/reviews/user/{user_id}`.
 - `USE_REVIEW_PLACEHOLDER`: If true, use placeholder reviews instead of calling Spring Boot. Default: `true`.
 
+Platform + Live Data Integration
+- `PLATFORM_API_BASE_URL`: Base URL of the core platform API (default `http://localhost:8080`).
+- `PLATFORM_API_KEY`: API key for the platform (`X-API-KEY` header).
+- `PLATFORM_API_TIMEOUT`: Request timeout in seconds (default `6`).
+- `WEATHER_API_URL`: Weather API endpoint (default `https://api.open-meteo.com/v1/forecast`).
+- `MARKET_DATA_API_URL`: Optional external market data feed (e.g., ZIMSTAT proxy).
+
 API Endpoints
 Pricing
 - `POST /predict-price`: Predict a suggested price. Accepts a single request payload.
 - `POST /pricing/batch`: Batch pricing predictions.
 - `GET /pricing/schema`: Returns required fields and model columns.
+- `POST /pricing/auto`: Predict price and apply supply/demand adjustments from live platform signals.
 
 Forecasting
 - `GET /forecast/{commodity}`: Demand forecast for a commodity. Query params: `periods`, `region`, `visual`.
@@ -67,8 +75,43 @@ Forecasting
 Recommendations
 - `POST /recommendations/prescriptive`: Recommend crops based on climate, budget, and demand signals.
 
+Logistics
+- `POST /logistics/match`: Match a logistics request to providers using route efficiency and cost signals.
+
+Integrations
+- `GET /integrations/weather`: Fetch live weather data for a latitude/longitude.
+- `GET /integrations/market-prices`: Fetch market prices from platform produce data or external feed.
+
 Trust Score
 - `GET /trust-score/{user_id}`: Computes a trust score from reviews.
+
+Example Requests
+Auto pricing with live signals:
+```json
+{
+  "commodity": "maize",
+  "market": "harare",
+  "category": "cereals",
+  "unit": "KG",
+  "month": 11,
+  "latitude": -17.8,
+  "longitude": 31.0,
+  "currency": "USD",
+  "priceflag": "actual",
+  "use_live_signals": true,
+  "signal_window_days": 30,
+  "max_adjustment": 0.3
+}
+```
+
+Logistics match using platform data:
+```json
+{
+  "request_id": "123",
+  "top_n": 3,
+  "weights": {"cost": 0.4, "distance": 0.4, "capacity": 0.2}
+}
+```
 
 Health
 - `GET /health`: Health check.

@@ -10,3 +10,5 @@ DataSets
 
 # Virtual environments
 .venv
+
+runapp.bat
