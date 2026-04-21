@@ -63,6 +63,8 @@ def _install_fake_joblib():
 
 _install_fake_joblib()
 import main  # noqa: E402
+from app.services import integrations as integrations_service  # noqa: E402
+from app.services import pricing as pricing_service  # noqa: E402
 
 
 client = TestClient(main.app)
@@ -255,7 +257,8 @@ def test_auto_pricing_with_live_signals(monkeypatch):
             "supply_qty": 60.0,
         }, []
 
-    monkeypatch.setattr(main, "_resolve_platform_signals", _fake_signals)
+    monkeypatch.setattr(
+        pricing_service, "resolve_platform_signals", _fake_signals)
     payload = {
         "commodity": "maize",
         "market": "harare",
@@ -287,8 +290,10 @@ def test_logistics_match_with_payload():
             "quantity": 5,
         },
         "providers": [
-            {"id": "prov-1", "latitude": -17.9, "longitude": 31.1, "cost_per_km": 0.8, "capacity": 8},
-            {"id": "prov-2", "latitude": -19.2, "longitude": 32.1, "cost_per_km": 0.5, "capacity": 3},
+            {"id": "prov-1", "latitude": -17.9, "longitude": 31.1,
+                "cost_per_km": 0.8, "capacity": 8},
+            {"id": "prov-2", "latitude": -19.2, "longitude": 32.1,
+                "cost_per_km": 0.5, "capacity": 3},
         ],
         "top_n": 2,
     }
@@ -307,8 +312,10 @@ def test_integrations_weather(monkeypatch):
             None,
         )
 
-    monkeypatch.setattr(main, "_fetch_weather_open_meteo", _fake_weather)
-    resp = client.get("/integrations/weather?latitude=-17.8&longitude=31.0&days=3")
+    monkeypatch.setattr(integrations_service,
+                        "fetch_weather_open_meteo", _fake_weather)
+    resp = client.get(
+        "/integrations/weather?latitude=-17.8&longitude=31.0&days=3")
     assert resp.status_code == 200
     body = resp.json()
     assert body["source"] == "open_meteo"
@@ -322,9 +329,12 @@ def test_integrations_market_prices(monkeypatch):
     async def _fake_external(region, commodity=None):
         return ([], "external", None)
 
-    monkeypatch.setattr(main, "_fetch_platform_market_prices", _fake_platform)
-    monkeypatch.setattr(main, "_fetch_external_market_prices", _fake_external)
-    resp = client.get("/integrations/market-prices?region=Manicaland&commodity=maize")
+    monkeypatch.setattr(integrations_service,
+                        "fetch_platform_market_prices", _fake_platform)
+    monkeypatch.setattr(integrations_service,
+                        "fetch_external_market_prices", _fake_external)
+    resp = client.get(
+        "/integrations/market-prices?region=Manicaland&commodity=maize")
     assert resp.status_code == 200
     body = resp.json()
     assert body["sources"] == ["platform"]

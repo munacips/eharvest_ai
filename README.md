@@ -11,7 +11,11 @@ Key Features
 - Trust score computation from review data (Spring Boot integration or placeholder data).
 
 Project Structure
-- main.py: FastAPI app and all endpoints.
+- main.py: Thin entrypoint that imports the app.
+- app/factory.py: FastAPI app factory and router registration.
+- app/models.py: Pydantic request/response models.
+- app/services/: Business logic grouped by domain (pricing, forecasting, logistics, integrations, trust).
+- app/routers/: Route handlers grouped by feature.
 - scripts/train_pipeline.py: Training pipeline for pricing and demand forecast models.
 - ai_training/: Training datasets and serialized model artifacts.
 - tests/test_api.py: API test suite with dummy models.
