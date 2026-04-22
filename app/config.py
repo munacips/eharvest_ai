@@ -61,7 +61,7 @@ SPRING_BOOT_BASE_URL = os.getenv("SPRING_BOOT_BASE_URL", "").rstrip("/")
 SPRING_BOOT_REVIEWS_PATH = os.getenv(
     "SPRING_BOOT_REVIEWS_PATH", "/api/reviews/user/{user_id}")
 USE_REVIEW_PLACEHOLDER = os.getenv(
-    "USE_REVIEW_PLACEHOLDER", "true").lower() in ("1", "true", "yes")
+    "USE_REVIEW_PLACEHOLDER", "false").lower() in ("1", "true", "yes")
 PLATFORM_API_BASE_URL = os.getenv(
     "PLATFORM_API_BASE_URL", "http://localhost:8080").rstrip("/")
 PLATFORM_API_KEY = os.getenv(

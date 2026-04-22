@@ -65,15 +65,49 @@ _install_fake_joblib()
 import main  # noqa: E402
 from app.services import integrations as integrations_service  # noqa: E402
 from app.services import pricing as pricing_service  # noqa: E402
+from app.services import trust as trust_service  # noqa: E402
+from app.routers import system as system_router  # noqa: E402
 
 
 client = TestClient(main.app)
 
 
-def test_health():
+def test_health(monkeypatch):
+    monkeypatch.setattr(system_router, "_models_health_check", lambda: {"status": "ok"})
+
+    async def _ok_platform():
+        return {"status": "ok", "url": "http://localhost:8080/api/v1/produce", "status_code": 200}
+
+    async def _ok_reviews():
+        return {"status": "ok", "url": "http://localhost:8080", "status_code": 200}
+
+    monkeypatch.setattr(system_router, "_platform_api_health_check", _ok_platform)
+    monkeypatch.setattr(system_router, "_review_service_health_check", _ok_reviews)
+
     resp = client.get("/health")
     assert resp.status_code == 200
-    assert resp.json()["status"] == "ok"
+    body = resp.json()
+    assert body["status"] == "ok"
+    assert body["checks"]["models"]["status"] == "ok"
+    assert body["checks"]["platform_api"]["status"] == "ok"
+    assert body["checks"]["review_service"]["status"] == "ok"
+
+
+def test_health_returns_503_when_dependency_fails(monkeypatch):
+    monkeypatch.setattr(system_router, "_models_health_check", lambda: {"status": "ok"})
+
+    async def _platform_error():
+        return {"status": "error", "detail": "timeout"}
+
+    async def _ok_reviews():
+        return {"status": "ok", "url": "http://localhost:8080", "status_code": 200}
+
+    monkeypatch.setattr(system_router, "_platform_api_health_check", _platform_error)
+    monkeypatch.setattr(system_router, "_review_service_health_check", _ok_reviews)
+
+    resp = client.get("/health")
+    assert resp.status_code == 503
+    assert resp.json()["status"] == "error"
 
 
 def test_pricing_schema():
@@ -215,14 +249,18 @@ def test_prescriptive_recommendations():
     assert len(body["recommendations"]) == 2
 
 
-def test_trust_score_placeholder():
+def test_trust_score_surfaces_review_service_config_gap(monkeypatch):
+    monkeypatch.setattr(trust_service.config, "USE_REVIEW_PLACEHOLDER", False)
+    monkeypatch.setattr(trust_service.config, "SPRING_BOOT_BASE_URL", "")
+
     resp = client.get("/trust-score/user-123")
     assert resp.status_code == 200
     body = resp.json()
     assert body["user_id"] == "user-123"
     assert body["scale"] == 5
-    assert 1.0 <= body["trust_score"] <= 5.0
-    assert body["review_count"] >= 0
+    assert body["source"] == "spring_boot_error"
+    assert body["review_count"] == 0
+    assert body["warnings"] == ["spring_boot_base_url_not_set"]
 
 
 def test_auto_pricing_without_live_signals():
