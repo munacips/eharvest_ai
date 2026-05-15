@@ -220,7 +220,8 @@ def coerce_review_payload(payload: Dict[str, Any]) -> Optional[ReviewEntry]:
     elif text_rating is not None:
         rating_value = (0.7 * rating_value) + (0.3 * text_rating)
 
-    helpful_value = max(0, helpful_value) if helpful_value is not None else None
+    helpful_value = max(
+        0, helpful_value) if helpful_value is not None else None
 
     return ReviewEntry(
         rating=rating_value,
@@ -230,53 +231,6 @@ def coerce_review_payload(payload: Dict[str, Any]) -> Optional[ReviewEntry]:
         reported=reported,
         review_date=review_date,
     )
-
-
-def placeholder_reviews(user_id: str) -> List[ReviewEntry]:
-    """Return deterministic reviews for explicit placeholder/demo mode."""
-    _ = user_id
-    return [
-        ReviewEntry(
-            rating=4.6,
-            comment="Quick delivery and the produce quality was excellent.",
-            verified_purchase=True,
-            helpful_votes=12,
-            reported=False,
-            review_date="2025-06-12",
-        ),
-        ReviewEntry(
-            rating=4.2,
-            comment="Good experience overall, but packaging could improve.",
-            verified_purchase=True,
-            helpful_votes=5,
-            reported=False,
-            review_date="2025-07-03",
-        ),
-        ReviewEntry(
-            rating=3.8,
-            comment="Decent service, average quality, nothing special.",
-            verified_purchase=False,
-            helpful_votes=2,
-            reported=False,
-            review_date="2025-09-01",
-        ),
-        ReviewEntry(
-            rating=4.9,
-            comment="Fantastic support and very fresh produce!",
-            verified_purchase=True,
-            helpful_votes=18,
-            reported=False,
-            review_date="2025-11-15",
-        ),
-        ReviewEntry(
-            rating=2.6,
-            comment="Late delivery and items were damaged.",
-            verified_purchase=False,
-            helpful_votes=1,
-            reported=True,
-            review_date="2026-01-10",
-        ),
-    ]
 
 
 def compute_trust_score(reviews: List[ReviewEntry]) -> Dict[str, Any]:
@@ -303,7 +257,8 @@ def compute_trust_score(reviews: List[ReviewEntry]) -> Dict[str, Any]:
 
         # Helpful, verified, and recent reviews count a bit more because they
         # tend to be the strongest trust signals for marketplace buyers.
-        weight = 1.0 + (min(helpful_votes, MAX_HELPFUL_VOTES_WEIGHT) / MAX_HELPFUL_VOTES_WEIGHT)
+        weight = 1.0 + \
+            (min(helpful_votes, MAX_HELPFUL_VOTES_WEIGHT) / MAX_HELPFUL_VOTES_WEIGHT)
         weight *= _review_recency_weight(review.review_date)
 
         if review.verified_purchase:
@@ -317,7 +272,8 @@ def compute_trust_score(reviews: List[ReviewEntry]) -> Dict[str, Any]:
         ratings.append(rating)
         weights.append(weight)
 
-    weighted_avg = float(np.average(ratings, weights=weights)) if weights else 0.0
+    weighted_avg = float(np.average(
+        ratings, weights=weights)) if weights else 0.0
     average_rating = float(np.mean(ratings)) if ratings else 0.0
     reported_ratio = reported_count / len(reviews)
     verified_ratio = verified_count / len(reviews)
@@ -336,9 +292,7 @@ def compute_trust_score(reviews: List[ReviewEntry]) -> Dict[str, Any]:
 
 
 async def fetch_user_reviews(user_id: str) -> Tuple[List[ReviewEntry], str, Optional[str]]:
-    """Fetch reviews from Spring Boot, falling back only in explicit placeholder mode."""
-    if config.USE_REVIEW_PLACEHOLDER:
-        return placeholder_reviews(user_id), "placeholder", "trust_placeholder_enabled"
+    """Fetch reviews from the live Spring Boot reviews service."""
     if not config.SPRING_BOOT_BASE_URL:
         return [], "spring_boot_error", "spring_boot_base_url_not_set"
 

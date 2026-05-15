@@ -1,3 +1,5 @@
+from app.services import trust as trust_service
+from app.models import ReviewEntry
 import asyncio
 import sys
 from pathlib import Path
@@ -7,9 +9,6 @@ import httpx
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
-
-from app.models import ReviewEntry
-from app.services import trust as trust_service
 
 
 def _install_fake_async_client(monkeypatch, response_factory):
@@ -30,7 +29,8 @@ def _install_fake_async_client(monkeypatch, response_factory):
 
 
 def test_coerce_review_payload_normalizes_alt_fields(monkeypatch):
-    monkeypatch.setattr(trust_service, "comment_sentiment_score", lambda comment: 1.0)
+    monkeypatch.setattr(
+        trust_service, "comment_sentiment_score", lambda comment: 1.0)
 
     review = trust_service.coerce_review_payload(
         {
@@ -87,8 +87,8 @@ def test_fetch_user_reviews_returns_error_for_invalid_json(monkeypatch):
         request = httpx.Request("GET", url)
         return httpx.Response(200, content=b"not-json", request=request)
 
-    monkeypatch.setattr(trust_service.config, "USE_REVIEW_PLACEHOLDER", False)
-    monkeypatch.setattr(trust_service.config, "SPRING_BOOT_BASE_URL", "https://reviews.example.com")
+    monkeypatch.setattr(trust_service.config,
+                        "SPRING_BOOT_BASE_URL", "https://reviews.example.com")
     monkeypatch.setattr(
         trust_service.config,
         "SPRING_BOOT_REVIEWS_PATH",
@@ -105,21 +105,7 @@ def test_fetch_user_reviews_returns_error_for_invalid_json(monkeypatch):
     assert warning == "spring_boot_error: InvalidJSON"
 
 
-def test_fetch_user_reviews_returns_placeholder_only_when_explicitly_enabled(monkeypatch):
-    monkeypatch.setattr(trust_service.config, "USE_REVIEW_PLACEHOLDER", True)
-    monkeypatch.setattr(trust_service.config, "SPRING_BOOT_BASE_URL", "")
-
-    reviews, source, warning = asyncio.run(
-        trust_service.fetch_user_reviews("user-123")
-    )
-
-    assert len(reviews) == 5
-    assert source == "placeholder"
-    assert warning == "trust_placeholder_enabled"
-
-
-def test_fetch_user_reviews_requires_base_url_when_placeholder_disabled(monkeypatch):
-    monkeypatch.setattr(trust_service.config, "USE_REVIEW_PLACEHOLDER", False)
+def test_fetch_user_reviews_requires_base_url_when_live_service_missing(monkeypatch):
     monkeypatch.setattr(trust_service.config, "SPRING_BOOT_BASE_URL", "")
 
     reviews, source, warning = asyncio.run(
@@ -170,8 +156,8 @@ def test_fetch_user_reviews_extracts_nested_reviews_and_warns_on_skips(monkeypat
         "comment_sentiment_score",
         lambda comment: 0.5 if comment else None,
     )
-    monkeypatch.setattr(trust_service.config, "USE_REVIEW_PLACEHOLDER", False)
-    monkeypatch.setattr(trust_service.config, "SPRING_BOOT_BASE_URL", "https://reviews.example.com")
+    monkeypatch.setattr(trust_service.config,
+                        "SPRING_BOOT_BASE_URL", "https://reviews.example.com")
     monkeypatch.setattr(
         trust_service.config,
         "SPRING_BOOT_REVIEWS_PATH",

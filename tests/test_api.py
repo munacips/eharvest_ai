@@ -66,6 +66,7 @@ import main  # noqa: E402
 from app.services import integrations as integrations_service  # noqa: E402
 from app.services import pricing as pricing_service  # noqa: E402
 from app.services import trust as trust_service  # noqa: E402
+from app.routers import pricing as pricing_router  # noqa: E402
 from app.routers import system as system_router  # noqa: E402
 
 
@@ -73,7 +74,8 @@ client = TestClient(main.app)
 
 
 def test_health(monkeypatch):
-    monkeypatch.setattr(system_router, "_models_health_check", lambda: {"status": "ok"})
+    monkeypatch.setattr(system_router, "_models_health_check",
+                        lambda: {"status": "ok"})
 
     async def _ok_platform():
         return {"status": "ok", "url": "http://localhost:8080/api/v1/produce", "status_code": 200}
@@ -81,8 +83,10 @@ def test_health(monkeypatch):
     async def _ok_reviews():
         return {"status": "ok", "url": "http://localhost:8080", "status_code": 200}
 
-    monkeypatch.setattr(system_router, "_platform_api_health_check", _ok_platform)
-    monkeypatch.setattr(system_router, "_review_service_health_check", _ok_reviews)
+    monkeypatch.setattr(
+        system_router, "_platform_api_health_check", _ok_platform)
+    monkeypatch.setattr(
+        system_router, "_review_service_health_check", _ok_reviews)
 
     resp = client.get("/health")
     assert resp.status_code == 200
@@ -94,7 +98,8 @@ def test_health(monkeypatch):
 
 
 def test_health_returns_503_when_dependency_fails(monkeypatch):
-    monkeypatch.setattr(system_router, "_models_health_check", lambda: {"status": "ok"})
+    monkeypatch.setattr(system_router, "_models_health_check",
+                        lambda: {"status": "ok"})
 
     async def _platform_error():
         return {"status": "error", "detail": "timeout"}
@@ -102,8 +107,10 @@ def test_health_returns_503_when_dependency_fails(monkeypatch):
     async def _ok_reviews():
         return {"status": "ok", "url": "http://localhost:8080", "status_code": 200}
 
-    monkeypatch.setattr(system_router, "_platform_api_health_check", _platform_error)
-    monkeypatch.setattr(system_router, "_review_service_health_check", _ok_reviews)
+    monkeypatch.setattr(
+        system_router, "_platform_api_health_check", _platform_error)
+    monkeypatch.setattr(
+        system_router, "_review_service_health_check", _ok_reviews)
 
     resp = client.get("/health")
     assert resp.status_code == 503
@@ -141,6 +148,70 @@ def test_predict_price():
     body = resp.json()
     assert body["status"] == "success"
     assert body["currency"] == "USD"
+
+
+def test_predict_price_normalizes_categorical_inputs(monkeypatch):
+    captured = {}
+
+    class CapturePricingModel:
+        def predict(self, X):
+            captured["frame"] = X.copy()
+            return np.array([1.25] * len(X))
+
+    monkeypatch.setattr(
+        pricing_router, "dynamic_pricing_model", CapturePricingModel())
+    monkeypatch.setattr(
+        pricing_router,
+        "model_columns",
+        [
+            "month",
+            "year",
+            "latitude",
+            "longitude",
+            "market_id",
+            "commodity_id",
+            "commodity_Maize",
+            "market_Harare",
+            "category_Cereals",
+            "unit_KG",
+            "currency_USD",
+            "priceflag_actual",
+            "pricetype_Retail",
+            "admin1_Manicaland",
+            "admin2_Mutare",
+        ],
+    )
+
+    payload = {
+        "commodity": "maize",
+        "market": "harare",
+        "category": "cereals",
+        "unit": "kg",
+        "month": 11,
+        "latitude": -17.8,
+        "longitude": 31.0,
+        "currency": "usd",
+        "priceflag": "actual",
+        "admin1": "manicaland",
+        "admin2": "mutare",
+        "pricetype": "retail",
+        "market_id": 1,
+        "commodity_id": 51,
+        "year": 2024,
+    }
+
+    resp = client.post("/predict-price", json=payload)
+    assert resp.status_code == 200
+    frame = captured["frame"]
+    assert frame.iloc[0]["commodity_Maize"] == 1
+    assert frame.iloc[0]["market_Harare"] == 1
+    assert frame.iloc[0]["category_Cereals"] == 1
+    assert frame.iloc[0]["unit_KG"] == 1
+    assert frame.iloc[0]["currency_USD"] == 1
+    assert frame.iloc[0]["priceflag_actual"] == 1
+    assert frame.iloc[0]["pricetype_Retail"] == 1
+    assert frame.iloc[0]["admin1_Manicaland"] == 1
+    assert frame.iloc[0]["admin2_Mutare"] == 1
 
 
 def test_predict_price_batch():
@@ -250,7 +321,6 @@ def test_prescriptive_recommendations():
 
 
 def test_trust_score_surfaces_review_service_config_gap(monkeypatch):
-    monkeypatch.setattr(trust_service.config, "USE_REVIEW_PLACEHOLDER", False)
     monkeypatch.setattr(trust_service.config, "SPRING_BOOT_BASE_URL", "")
 
     resp = client.get("/trust-score/user-123")

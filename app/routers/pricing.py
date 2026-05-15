@@ -11,9 +11,30 @@ from app.state import dynamic_pricing_model, model_columns
 router = APIRouter()
 
 
+def _normalize_pricing_text(value: str) -> str:
+    return value.strip().title()
+
+
+def _normalize_pricing_request_data(data: Dict[str, Any]) -> Dict[str, Any]:
+    normalized = dict(data)
+    for field in ["commodity", "market", "category", "admin1", "admin2", "pricetype"]:
+        value = normalized.get(field)
+        if isinstance(value, str):
+            normalized[field] = _normalize_pricing_text(value)
+    for field in ["unit", "currency"]:
+        value = normalized.get(field)
+        if isinstance(value, str):
+            normalized[field] = value.strip().upper()
+    value = normalized.get("priceflag")
+    if isinstance(value, str):
+        normalized["priceflag"] = value.strip().lower()
+    return normalized
+
+
 @router.post("/predict-price")
 async def predict_price(request: PricePredictionRequest):
-    input_data = pd.DataFrame([request.model_dump()])
+    input_data = pd.DataFrame(
+        [_normalize_pricing_request_data(request.model_dump())])
     input_encoded = pd.get_dummies(input_data)
     final_input = input_encoded.reindex(columns=model_columns, fill_value=0)
     prediction = dynamic_pricing_model.predict(final_input)
@@ -61,7 +82,9 @@ async def predict_price_batch(request: BatchPricePredictionRequest):
     if not request.items:
         raise HTTPException(status_code=400, detail="items cannot be empty")
 
-    input_df = pd.DataFrame([item.model_dump() for item in request.items])
+    input_df = pd.DataFrame([
+        _normalize_pricing_request_data(item.model_dump()) for item in request.items
+    ])
     input_encoded = pd.get_dummies(input_df)
     final_input = input_encoded.reindex(columns=model_columns, fill_value=0)
     predictions = dynamic_pricing_model.predict(final_input)
@@ -84,7 +107,8 @@ async def predict_price_batch(request: BatchPricePredictionRequest):
 
 @router.post("/pricing/auto")
 async def auto_pricing(request: AutoPricingRequest):
-    input_data = pd.DataFrame([request.model_dump()])
+    input_data = pd.DataFrame(
+        [_normalize_pricing_request_data(request.model_dump())])
     input_encoded = pd.get_dummies(input_data)
     final_input = input_encoded.reindex(columns=model_columns, fill_value=0)
     prediction = dynamic_pricing_model.predict(final_input)

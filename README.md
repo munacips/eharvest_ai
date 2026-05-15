@@ -8,7 +8,7 @@ Key Features
 - Demand forecasting per commodity (with optional region conditioning).
 - Demand vs supply projections using recent sales, weather, and market data.
 - Prescriptive crop recommendations based on climate, budget, and demand signals.
-- Trust score computation from review data (Spring Boot integration or placeholder data).
+- Trust score computation from review data fetched from the Spring Boot reviews service.
 
 Project Structure
 - main.py: Thin entrypoint that imports the app.
@@ -56,11 +56,12 @@ Environment Variables
 These control the trust score integration with a Spring Boot reviews service.
 - `SPRING_BOOT_BASE_URL`: Base URL of the Spring Boot service (e.g., `http://localhost:8080`).
 - `SPRING_BOOT_REVIEWS_PATH`: Reviews endpoint path. Default: `/api/reviews/user/{user_id}`.
-- `USE_REVIEW_PLACEHOLDER`: If true, use placeholder reviews instead of calling Spring Boot. Default: `true`.
+- `PLATFORM_API_KEY`: Required API key for the platform (`X-API-KEY` header).
+
+Environment values can be stored in a local `.env` file and loaded automatically at app startup.
 
 Platform + Live Data Integration
 - `PLATFORM_API_BASE_URL`: Base URL of the core platform API (default `http://localhost:8080`).
-- `PLATFORM_API_KEY`: API key for the platform (`X-API-KEY` header).
 - `PLATFORM_API_TIMEOUT`: Request timeout in seconds (default `6`).
 - `WEATHER_API_URL`: Weather API endpoint (default `https://api.open-meteo.com/v1/forecast`).
 - `MARKET_DATA_API_URL`: Optional external market data feed (e.g., ZIMSTAT proxy).

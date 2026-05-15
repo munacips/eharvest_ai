@@ -76,6 +76,8 @@ async def _probe_http_endpoint(
 async def _platform_api_health_check() -> Dict[str, Any]:
     if not config.PLATFORM_API_BASE_URL:
         return {"status": "error", "detail": "platform_api_base_url_not_set"}
+    if not config.PLATFORM_API_KEY:
+        return {"status": "error", "detail": "platform_api_key_not_set"}
 
     return await _probe_http_endpoint(
         f"{config.PLATFORM_API_BASE_URL}/api/v1/produce",
@@ -85,11 +87,6 @@ async def _platform_api_health_check() -> Dict[str, Any]:
 
 
 async def _review_service_health_check() -> Dict[str, Any]:
-    if config.USE_REVIEW_PLACEHOLDER:
-        return {
-            "status": "degraded",
-            "detail": "trust_placeholder_enabled",
-        }
     if not config.SPRING_BOOT_BASE_URL:
         return {"status": "error", "detail": "spring_boot_base_url_not_set"}
 

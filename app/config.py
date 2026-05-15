@@ -1,6 +1,11 @@
 import os
 from typing import List
 
+from dotenv import load_dotenv
+
+
+load_dotenv()
+
 
 def parse_cors_origins(raw_value: str) -> List[str]:
     if not raw_value:
@@ -60,12 +65,9 @@ CROP_COST_USD_PER_HA = {
 SPRING_BOOT_BASE_URL = os.getenv("SPRING_BOOT_BASE_URL", "").rstrip("/")
 SPRING_BOOT_REVIEWS_PATH = os.getenv(
     "SPRING_BOOT_REVIEWS_PATH", "/api/reviews/user/{user_id}")
-USE_REVIEW_PLACEHOLDER = os.getenv(
-    "USE_REVIEW_PLACEHOLDER", "false").lower() in ("1", "true", "yes")
 PLATFORM_API_BASE_URL = os.getenv(
     "PLATFORM_API_BASE_URL", "http://localhost:8080").rstrip("/")
-PLATFORM_API_KEY = os.getenv(
-    "PLATFORM_API_KEY", "eharvest-ai-secret-key-12345")
+PLATFORM_API_KEY = os.getenv("PLATFORM_API_KEY", "").strip()
 PLATFORM_API_TIMEOUT = float(os.getenv("PLATFORM_API_TIMEOUT", "6"))
 WEATHER_API_URL = os.getenv(
     "WEATHER_API_URL", "https://api.open-meteo.com/v1/forecast").strip()
