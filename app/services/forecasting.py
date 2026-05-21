@@ -1,10 +1,12 @@
-from datetime import timedelta
+from datetime import UTC, datetime, timedelta
 from typing import Any, Dict, List, Optional
 
 import numpy as np
 import pandas as pd
 
 from app.services.common import clamp, safe_mean, season_from_month
+
+MARKET_SIGNAL_STALE_AFTER_DAYS = 45
 
 
 def apply_region_filter(df: pd.DataFrame, region: str) -> pd.DataFrame:
@@ -68,42 +70,77 @@ def compute_weather_impact(weather_df: Optional[pd.DataFrame], season: Optional[
     return clamp(0.4 * rain_factor + 0.2 * temp_factor, -0.3, 0.3)
 
 
-def compute_market_impact(market_df: Optional[pd.DataFrame], commodity: str) -> float:
-    """Compute market pressure impact for a commodity from recent vs long-run price.
+def summarize_market_signal(market_df: Optional[pd.DataFrame], commodity: str) -> Dict[str, Any]:
+    """Summarize market signal freshness and trend for a commodity.
 
     Rising prices reduce demand-side projections (negative impact), while falling
-    prices can mildly support demand (positive impact). The output is bounded.
+    prices can mildly support demand (positive impact). Stale inputs are surfaced
+    explicitly so callers do not mistake old static data for a live trend.
     """
+    summary: Dict[str, Any] = {
+        "commodity": commodity,
+        "impact": 0.0,
+        "price_trend": 0.0,
+        "latest_observation_date": None,
+        "recent_observation_count": 0,
+        "is_stale": False,
+        "warning": None,
+    }
     if market_df is None or market_df.empty:
-        return 0.0
+        summary["warning"] = "market_data_unavailable"
+        return summary
     if "commodity" not in market_df.columns or "price" not in market_df.columns or "date" not in market_df.columns:
-        return 0.0
+        summary["warning"] = "market_data_missing_required_columns"
+        return summary
     if not isinstance(commodity, str) or not commodity.strip():
-        return 0.0
+        summary["warning"] = "market_commodity_not_provided"
+        return summary
 
     commodity_df = market_df[
         market_df["commodity"].fillna("").astype(
             str).str.lower() == commodity.lower()
     ].copy()
     if commodity_df.empty:
-        return 0.0
+        summary["warning"] = "market_commodity_not_found"
+        return summary
 
     commodity_df["date"] = pd.to_datetime(
-        commodity_df["date"], errors="coerce")
+        commodity_df["date"], errors="coerce", utc=True)
     commodity_df["price"] = pd.to_numeric(
         commodity_df["price"], errors="coerce")
     commodity_df = commodity_df.dropna(subset=["date", "price"])
     if commodity_df.empty:
-        return 0.0
+        summary["warning"] = "market_commodity_has_no_valid_rows"
+        return summary
 
     overall = safe_mean(commodity_df["price"])
-    recent_cutoff = commodity_df["date"].max() - timedelta(days=90)
+    latest_observation = commodity_df["date"].max()
+    if pd.isna(latest_observation):
+        summary["warning"] = "market_commodity_has_no_valid_rows"
+        return summary
+
+    summary["latest_observation_date"] = latest_observation.strftime("%Y-%m-%d")
+    age_days = max(0, (datetime.now(UTC) - latest_observation.to_pydatetime()).days)
+    if age_days > MARKET_SIGNAL_STALE_AFTER_DAYS:
+        summary["is_stale"] = True
+        summary["warning"] = f"market_data_stale:{age_days}d_old"
+        return summary
+
+    recent_cutoff = latest_observation - timedelta(days=90)
     recent = commodity_df[commodity_df["date"] >= recent_cutoff]
+    summary["recent_observation_count"] = int(len(recent))
     recent_avg = safe_mean(recent["price"])
     if overall == 0:
-        return 0.0
+        summary["warning"] = "market_price_average_is_zero"
+        return summary
     price_trend = (recent_avg - overall) / overall
-    return clamp(-0.2 * price_trend, -0.2, 0.2)
+    summary["price_trend"] = float(price_trend)
+    summary["impact"] = float(clamp(-0.2 * price_trend, -0.2, 0.2))
+    return summary
+
+
+def compute_market_impact(market_df: Optional[pd.DataFrame], commodity: str) -> float:
+    return float(summarize_market_signal(market_df, commodity)["impact"])
 
 
 def forecast_monthly_series(

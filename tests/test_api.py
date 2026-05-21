@@ -1,5 +1,8 @@
+"""API tests for the eharvest application."""
+
 # How to run: pytest -q
 
+import json
 import sys
 import types
 from pathlib import Path
@@ -66,11 +69,37 @@ import main  # noqa: E402
 from app.services import integrations as integrations_service  # noqa: E402
 from app.services import pricing as pricing_service  # noqa: E402
 from app.services import trust as trust_service  # noqa: E402
+from app.routers import forecasting as forecasting_router  # noqa: E402
 from app.routers import pricing as pricing_router  # noqa: E402
 from app.routers import system as system_router  # noqa: E402
 
 
 client = TestClient(main.app)
+
+
+def _load_real_forecast_assets():
+    fake_joblib = sys.modules.get("joblib")
+    sys.modules.pop("joblib", None)
+    try:
+        import joblib as real_joblib
+
+        forecast_model = real_joblib.load(
+            ROOT / "ai_training" / "demand_forecast_model.pkl")
+        commodity_cols = real_joblib.load(
+            ROOT / "ai_training" / "forecast_features.pkl")
+    finally:
+        if fake_joblib is not None:
+            sys.modules["joblib"] = fake_joblib
+
+    return forecast_model, commodity_cols
+
+
+def test_root():
+    resp = client.get("/")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert "message" in body
+    assert "/predict-price" in body["message"]
 
 
 def test_health(monkeypatch):
@@ -214,6 +243,58 @@ def test_predict_price_normalizes_categorical_inputs(monkeypatch):
     assert frame.iloc[0]["admin2_Mutare"] == 1
 
 
+def test_predict_price_maps_request_values_to_model_vocabulary(monkeypatch):
+    captured = {}
+
+    class CapturePricingModel:
+        def predict(self, X):
+            captured["frame"] = X.copy()
+            return np.array([2.5] * len(X))
+
+    monkeypatch.setattr(
+        pricing_router, "dynamic_pricing_model", CapturePricingModel())
+    monkeypatch.setattr(
+        pricing_router,
+        "model_columns",
+        [
+            "month",
+            "latitude",
+            "longitude",
+            "commodity_Maize",
+            "market_Mbare",
+            "category_cereals and tubers",
+            "unit_KG",
+            "currency_USD",
+            "priceflag_actual",
+            "admin1_Manicaland",
+        ],
+    )
+
+    payload = {
+        "commodity": "maize",
+        "market": "mbare",
+        "category": "cereals",
+        "unit": "kg",
+        "month": 11,
+        "latitude": -17.8,
+        "longitude": 31.0,
+        "currency": "usd",
+        "priceflag": "actual",
+        "admin1": "manicaland",
+    }
+
+    resp = client.post("/predict-price", json=payload)
+    assert resp.status_code == 200
+    frame = captured["frame"]
+    assert frame.iloc[0]["commodity_Maize"] == 1
+    assert frame.iloc[0]["market_Mbare"] == 1
+    assert frame.iloc[0]["category_cereals and tubers"] == 1
+    assert frame.iloc[0]["unit_KG"] == 1
+    assert frame.iloc[0]["currency_USD"] == 1
+    assert frame.iloc[0]["priceflag_actual"] == 1
+    assert frame.iloc[0]["admin1_Manicaland"] == 1
+
+
 def test_predict_price_batch():
     payload = {
         "items": [
@@ -270,6 +351,71 @@ def test_forecast_endpoint():
     assert "visual" in body
 
 
+def test_forecast_endpoint_uses_real_model_artifacts(monkeypatch):
+    forecast_model, commodity_cols = _load_real_forecast_assets()
+    monkeypatch.setattr(forecasting_router, "forecast_model", forecast_model)
+    monkeypatch.setattr(forecasting_router, "commodity_cols", commodity_cols)
+
+    maize = client.get("/forecast/Maize?periods=2&visual=false").json()
+    beans = client.get("/forecast/Beans?periods=2&visual=false").json()
+    wheat = client.get("/forecast/Wheat?periods=2&visual=false").json()
+
+    maize_values = [point["value"] for point in maize["forecast"]]
+    beans_values = [point["value"] for point in beans["forecast"]]
+    wheat_values = [point["value"] for point in wheat["forecast"]]
+
+    assert len(maize_values) == 2
+    assert len(beans_values) == 2
+    assert len(wheat_values) == 2
+    assert maize_values != beans_values or beans_values != wheat_values
+    assert all(value >= 0 for value in maize_values +
+               beans_values + wheat_values)
+
+
+def test_forecast_endpoint_writes_results_for_multiple_commodities(monkeypatch):
+    commodities = [
+        "Beans",
+        "Beans (sugar)",
+        "Beans (sugar, biofortified)",
+        "Cowpeas",
+        "Groundnuts (shelled)",
+        "Maize",
+        "Maize meal",
+        "Maize meal (white, fortified)",
+        "Rice",
+        "Wheat",
+    ]
+    forecast_model, commodity_cols = _load_real_forecast_assets()
+    results = []
+
+    monkeypatch.setattr(forecasting_router, "forecast_model", forecast_model)
+    monkeypatch.setattr(forecasting_router, "commodity_cols", commodity_cols)
+
+    for commodity in commodities:
+        response = client.get(
+            f"/forecast/{commodity}?periods=3&visual=false"
+        )
+        assert response.status_code == 200
+        body = response.json()
+        results.append(
+            {
+                "commodity": commodity,
+                "status": response.status_code,
+                "forecast": body["forecast"],
+                "first_value": body["forecast"][0]["value"],
+                "last_value": body["forecast"][-1]["value"],
+            }
+        )
+
+    out_file = Path(__file__).resolve().with_name(
+        "forecasting_endpoint_results.json")
+    out_file.write_text(json.dumps(results, indent=2), encoding="utf-8")
+
+    assert out_file.exists()
+    assert len(results) == 10
+    assert all(len(item["forecast"]) == 3 for item in results)
+
+
 def test_demand_supply_forecast():
     payload = {
         "region": "Manicaland",
@@ -302,6 +448,34 @@ def test_demand_supply_forecast():
     assert body["region"] == "Manicaland"
     assert len(body["forecasts"]) >= 1
     assert len(body["forecasts"][0]["demand"]) == 3
+
+
+def test_demand_supply_forecast_surfaces_stale_market_signal():
+    payload = {
+        "region": "Manicaland",
+        "season": "rainy",
+        "periods": 2,
+        "historical_sales": [
+            {"date": "2024-01-01", "commodity": "maize",
+                "quantity": 120, "region": "Manicaland"},
+            {"date": "2024-02-01", "commodity": "maize",
+                "quantity": 135, "region": "Manicaland"},
+        ],
+        "market_data": [
+            {"date": "2024-01-01", "commodity": "maize", "price": 0.35,
+                "market": "Harare", "region": "Manicaland"},
+            {"date": "2024-02-01", "commodity": "maize", "price": 0.38,
+                "market": "Harare", "region": "Manicaland"},
+        ],
+    }
+    resp = client.post("/forecast/demand-supply", json=payload)
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["market_signals"][0]["commodity"] == "maize"
+    assert body["market_signals"][0]["impact"] == 0.0
+    assert body["market_signals"][0]["is_stale"] is True
+    assert body["warnings"]
+    assert body["warnings"][0].startswith("market_data_stale:")
 
 
 def test_prescriptive_recommendations():

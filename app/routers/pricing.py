@@ -1,3 +1,4 @@
+from difflib import get_close_matches
 from typing import Any, Dict, List
 
 import pandas as pd
@@ -9,6 +10,33 @@ from app.services.common import clamp
 from app.state import dynamic_pricing_model, model_columns
 
 router = APIRouter()
+
+CATEGORICAL_MODEL_FIELDS = [
+    "commodity",
+    "market",
+    "category",
+    "unit",
+    "currency",
+    "priceflag",
+    "pricetype",
+    "admin1",
+    "admin2",
+]
+
+PRICING_CATEGORY_ALIASES = {
+    "cereals": "cereals and tubers",
+    "cereal": "cereals and tubers",
+    "pulses": "pulses and nuts",
+    "pulse": "pulses and nuts",
+    "nuts": "pulses and nuts",
+    "oil": "oil and fats",
+    "oils": "oil and fats",
+    "fat": "oil and fats",
+    "fats": "oil and fats",
+    "meat": "meat, fish and eggs",
+    "fish": "meat, fish and eggs",
+    "eggs": "meat, fish and eggs",
+}
 
 
 def _normalize_pricing_text(value: str) -> str:
@@ -31,16 +59,82 @@ def _normalize_pricing_request_data(data: Dict[str, Any]) -> Dict[str, Any]:
     return normalized
 
 
+def _extract_allowed_model_values(columns: List[str], field: str) -> List[str]:
+    prefix = f"{field}_"
+    return [column[len(prefix):] for column in columns if column.startswith(prefix)]
+
+
+def _resolve_model_value(field: str, value: Any, columns: List[str]) -> Any:
+    if not isinstance(value, str):
+        return value
+
+    allowed_values = _extract_allowed_model_values(columns, field)
+    if not allowed_values:
+        return value
+
+    raw_value = value.strip()
+    if not raw_value:
+        return value
+
+    candidates = [raw_value]
+    lowered = raw_value.casefold()
+    if field == "category" and lowered in PRICING_CATEGORY_ALIASES:
+        candidates.insert(0, PRICING_CATEGORY_ALIASES[lowered])
+
+    exact_lookup = {allowed.casefold(): allowed for allowed in allowed_values}
+    for candidate in candidates:
+        exact_match = exact_lookup.get(candidate.casefold())
+        if exact_match:
+            return exact_match
+
+    for candidate in candidates:
+        candidate_text = candidate.casefold()
+        substring_matches = [
+            allowed for allowed in allowed_values
+            if candidate_text in allowed.casefold() or allowed.casefold() in candidate_text
+        ]
+        if len(substring_matches) == 1:
+            return substring_matches[0]
+
+    close_match = get_close_matches(
+        candidates[0].casefold(),
+        [allowed.casefold() for allowed in allowed_values],
+        n=1,
+        cutoff=0.6,
+    )
+    if close_match:
+        return exact_lookup[close_match[0]]
+
+    return value
+
+
+def _build_pricing_model_input(data: Dict[str, Any]) -> pd.DataFrame:
+    normalized = _normalize_pricing_request_data(data)
+
+    # Match request categories to the trained model vocabulary so we keep signal
+    # even when clients vary casing or use a simplified label like "cereals".
+    for field in CATEGORICAL_MODEL_FIELDS:
+        normalized[field] = _resolve_model_value(
+            field,
+            normalized.get(field),
+            model_columns,
+        )
+
+    input_data = pd.DataFrame([normalized])
+    input_encoded = pd.get_dummies(input_data)
+    return input_encoded.reindex(columns=model_columns, fill_value=0)
+
+
+def _predict_price_value(data: Dict[str, Any]) -> float:
+    final_input = _build_pricing_model_input(data)
+    prediction = dynamic_pricing_model.predict(final_input)
+    return round(max(0.0, float(prediction[0])), 2)
+
+
 @router.post("/predict-price")
 async def predict_price(request: PricePredictionRequest):
-    input_data = pd.DataFrame(
-        [_normalize_pricing_request_data(request.model_dump())])
-    input_encoded = pd.get_dummies(input_data)
-    final_input = input_encoded.reindex(columns=model_columns, fill_value=0)
-    prediction = dynamic_pricing_model.predict(final_input)
-
     return {
-        "suggested_price": round(float(prediction[0]), 2),
+        "suggested_price": _predict_price_value(request.model_dump()),
         "currency": request.currency,
         "status": "success",
     }
@@ -82,19 +176,12 @@ async def predict_price_batch(request: BatchPricePredictionRequest):
     if not request.items:
         raise HTTPException(status_code=400, detail="items cannot be empty")
 
-    input_df = pd.DataFrame([
-        _normalize_pricing_request_data(item.model_dump()) for item in request.items
-    ])
-    input_encoded = pd.get_dummies(input_df)
-    final_input = input_encoded.reindex(columns=model_columns, fill_value=0)
-    predictions = dynamic_pricing_model.predict(final_input)
-
     results = []
-    for item, pred in zip(request.items, predictions):
+    for item in request.items:
         results.append({
             "commodity": item.commodity,
             "market": item.market,
-            "suggested_price": round(float(pred), 2),
+            "suggested_price": _predict_price_value(item.model_dump()),
             "currency": item.currency,
         })
 
@@ -107,12 +194,7 @@ async def predict_price_batch(request: BatchPricePredictionRequest):
 
 @router.post("/pricing/auto")
 async def auto_pricing(request: AutoPricingRequest):
-    input_data = pd.DataFrame(
-        [_normalize_pricing_request_data(request.model_dump())])
-    input_encoded = pd.get_dummies(input_data)
-    final_input = input_encoded.reindex(columns=model_columns, fill_value=0)
-    prediction = dynamic_pricing_model.predict(final_input)
-    base_price = round(float(prediction[0]), 2)
+    base_price = _predict_price_value(request.model_dump())
 
     warnings: List[str] = []
     sources: List[str] = []
