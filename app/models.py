@@ -64,18 +64,9 @@ class ReviewEntry(BaseModel):
 
 
 class DemandSupplyForecastRequest(BaseModel):
-    region: str
-    season: Optional[str] = None
+    region: Optional[str] = None
     periods: int = 6
-    historical_sales: List[HistoricalSalesEntry]
-    historical_supply: Optional[List[HistoricalSupplyEntry]] = None
-    weather: Optional[List[WeatherEntry]] = None
-    market_data: Optional[List[MarketEntry]] = None
-    supply_multiplier: float = 1.05
     commodities: Optional[List[str]] = None
-    auto_fetch_external: bool = False
-    latitude: Optional[float] = None
-    longitude: Optional[float] = None
 
 
 class ClimateSnapshot(BaseModel):
@@ -93,13 +84,31 @@ class PrescriptiveRecommendationRequest(BaseModel):
     season: Optional[str] = None
     month: Optional[int] = None
     budget_usd: float
-    climate: ClimateSnapshot
+    climate: Optional[ClimateSnapshot] = None
     demand_forecast: Optional[List[DemandSignal]] = None
     market_data: Optional[List[MarketEntry]] = None
     top_n: int = 3
-    auto_fetch_external: bool = False
+    auto_fetch_external: bool = True
     latitude: Optional[float] = None
     longitude: Optional[float] = None
+
+    model_config = {
+        "json_schema_extra": {
+            "examples": [
+                {
+                    "region": "harare",
+                    "month": 11,
+                    "budget_usd": 500,
+                    "top_n": 3
+                },
+                {
+                    "region": "bulawayo",
+                    "budget_usd": 350,
+                    "season": "rainy"
+                }
+            ]
+        }
+    }
 
 
 class AutoPricingRequest(PricePredictionRequest):

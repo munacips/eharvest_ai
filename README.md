@@ -109,6 +109,25 @@ Auto pricing with live signals:
 }
 ```
 
+Prescriptive recommendations (minimal input):
+```json
+{
+  "region": "harare",
+  "month": 11,
+  "budget_usd": 500,
+  "top_n": 3
+}
+```
+
+Prescriptive recommendations (season-based):
+```json
+{
+  "region": "bulawayo",
+  "season": "rainy",
+  "budget_usd": 350
+}
+```
+
 Logistics match using platform data:
 ```json
 {

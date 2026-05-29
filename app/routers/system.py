@@ -21,10 +21,14 @@ def _models_health_check() -> Dict[str, Any]:
         issues.append("dynamic_pricing_model_not_loaded")
     if not getattr(state, "model_columns", None):
         issues.append("model_columns_not_loaded")
-    if getattr(state, "forecast_model", None) is None:
-        issues.append("forecast_model_not_loaded")
-    if not getattr(state, "commodity_cols", None):
-        issues.append("forecast_features_not_loaded")
+    if not getattr(state, "price_forecast_models", None):
+        issues.append("price_forecast_models_not_loaded")
+    if not getattr(state, "price_forecast_features", None):
+        issues.append("price_forecast_features_not_loaded")
+    if not getattr(state, "demand_models", None):
+        issues.append("demand_models_not_loaded")
+    if not getattr(state, "supply_models", None):
+        issues.append("supply_models_not_loaded")
 
     if issues:
         return {"status": "error", "issues": issues}
@@ -126,5 +130,5 @@ async def health_check(response: Response):
 @router.get("/")
 def read_root():
     return {
-        "message": "API is running. Use /predict-price for price predictions and /forecast/commodity for demand forecasts."
+        "message": "API is running. Use /predict-price for price predictions, /forecast/{commodity} for price forecasts, and /forecast/demand-supply for quantity forecasts."
     }

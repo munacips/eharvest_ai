@@ -1,11 +1,133 @@
 import asyncio
+from difflib import get_close_matches
 from typing import Any, Dict, Iterable, List, Optional, Tuple
+
+import pandas as pd
 
 from app.services.common import clamp, extract_date, extract_quantity, get_first_present, within_days
 from app.services.integrations import fetch_platform_list, match_commodity
 
-INACTIVE_SUPPLY_STATUSES = {"inactive", "archived", "sold", "unavailable", "deleted"}
-ORDER_LINE_ITEM_KEYS = ("items", "order_items", "orderItems", "line_items", "lineItems", "lines")
+INACTIVE_SUPPLY_STATUSES = {"inactive",
+                            "archived", "sold", "unavailable", "deleted"}
+ORDER_LINE_ITEM_KEYS = ("items", "order_items",
+                        "orderItems", "line_items", "lineItems", "lines")
+
+CATEGORICAL_MODEL_FIELDS = [
+    "commodity",
+    "market",
+    "category",
+    "unit",
+    "currency",
+    "priceflag",
+    "pricetype",
+    "admin1",
+    "admin2",
+]
+
+PRICING_CATEGORY_ALIASES = {
+    "cereals": "cereals and tubers",
+    "cereal": "cereals and tubers",
+    "pulses": "pulses and nuts",
+    "pulse": "pulses and nuts",
+    "nuts": "pulses and nuts",
+    "oil": "oil and fats",
+    "oils": "oil and fats",
+    "fat": "oil and fats",
+    "fats": "oil and fats",
+    "meat": "meat, fish and eggs",
+    "fish": "meat, fish and eggs",
+    "eggs": "meat, fish and eggs",
+}
+
+
+def _normalize_pricing_text(value: str) -> str:
+    return value.strip().title()
+
+
+def normalize_pricing_request_data(data: Dict[str, Any]) -> Dict[str, Any]:
+    normalized = dict(data)
+    for field in ["commodity", "market", "category", "admin1", "admin2", "pricetype"]:
+        value = normalized.get(field)
+        if isinstance(value, str):
+            normalized[field] = _normalize_pricing_text(value)
+    for field in ["unit", "currency"]:
+        value = normalized.get(field)
+        if isinstance(value, str):
+            normalized[field] = value.strip().upper()
+    value = normalized.get("priceflag")
+    if isinstance(value, str):
+        normalized["priceflag"] = value.strip().lower()
+    return normalized
+
+
+def _extract_allowed_model_values(columns: List[str], field: str) -> List[str]:
+    prefix = f"{field}_"
+    return [column[len(prefix):] for column in columns if column.startswith(prefix)]
+
+
+def _resolve_model_value(field: str, value: Any, columns: List[str]) -> Any:
+    if not isinstance(value, str):
+        return value
+
+    allowed_values = _extract_allowed_model_values(columns, field)
+    if not allowed_values:
+        return value
+
+    raw_value = value.strip()
+    if not raw_value:
+        return value
+
+    candidates = [raw_value]
+    lowered = raw_value.casefold()
+    if field == "category" and lowered in PRICING_CATEGORY_ALIASES:
+        candidates.insert(0, PRICING_CATEGORY_ALIASES[lowered])
+
+    exact_lookup = {allowed.casefold(): allowed for allowed in allowed_values}
+    for candidate in candidates:
+        exact_match = exact_lookup.get(candidate.casefold())
+        if exact_match:
+            return exact_match
+
+    for candidate in candidates:
+        candidate_text = candidate.casefold()
+        substring_matches = [
+            allowed for allowed in allowed_values
+            if candidate_text in allowed.casefold() or allowed.casefold() in candidate_text
+        ]
+        if len(substring_matches) == 1:
+            return substring_matches[0]
+
+    close_match = get_close_matches(
+        candidates[0].casefold(),
+        [allowed.casefold() for allowed in allowed_values],
+        n=1,
+        cutoff=0.6,
+    )
+    if close_match:
+        return exact_lookup[close_match[0]]
+
+    return value
+
+
+def build_pricing_model_input(data: Dict[str, Any], columns: List[str]) -> pd.DataFrame:
+    normalized = normalize_pricing_request_data(data)
+
+    for field in CATEGORICAL_MODEL_FIELDS:
+        normalized[field] = _resolve_model_value(
+            field,
+            normalized.get(field),
+            columns,
+        )
+
+    input_data = pd.DataFrame([normalized])
+    input_encoded = pd.get_dummies(input_data)
+    return input_encoded.reindex(columns=columns, fill_value=0)
+
+
+def predict_price_value(data: Dict[str, Any], model, columns: List[str]) -> float:
+    final_input = build_pricing_model_input(data, columns)
+    prediction = model.predict(final_input)
+    return round(max(0.0, float(prediction[0])), 2)
 
 
 def _normalize_window_days(window_days: int) -> int:
@@ -116,7 +238,8 @@ async def resolve_platform_signals(commodity: str, window_days: int) -> Tuple[Di
         fetch_platform_list("/api/v1/orders"),
         fetch_platform_list("/api/v1/produce"),
     )
-    (order_items, warn_items), (orders, warn_orders), (produce, warn_produce) = responses
+    (order_items, warn_items), (orders,
+                                warn_orders), (produce, warn_produce) = responses
 
     _append_warning(warnings, warn_items)
     _append_warning(warnings, warn_orders)

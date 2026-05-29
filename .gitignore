@@ -15,3 +15,12 @@ runapp.bat
 commit.bat
 
 tests/*.json
+
+synthetic_data_generation/*.csv
+
+ai_training/*.csv
+ai_training/*.pkl
+
+new_ai_training/*.csv
+new_ai_training/*.pkl
+new_ai_training/*.png

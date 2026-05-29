@@ -55,28 +55,8 @@ def call_exact_forecasts():
 def call_demand_supply():
     payload = {
         "region": "Manicaland",
-        "season": "rainy",
         "periods": 3,
-        "historical_sales": [
-            {"date": "2024-01-01", "commodity": "maize",
-                "quantity": 120, "region": "Manicaland"},
-            {"date": "2024-02-01", "commodity": "maize",
-                "quantity": 135, "region": "Manicaland"},
-            {"date": "2024-01-01", "commodity": "beans",
-                "quantity": 80, "region": "Manicaland"},
-        ],
-        "weather": [
-            {"date": "2024-01-01", "rainfall_mm": 85,
-                "temperature_c": 24, "region": "Manicaland"},
-            {"date": "2024-02-01", "rainfall_mm": 90,
-                "temperature_c": 25, "region": "Manicaland"},
-        ],
-        "market_data": [
-            {"date": "2024-01-01", "commodity": "maize", "price": 0.35,
-                "market": "Harare", "region": "Manicaland"},
-            {"date": "2024-02-01", "commodity": "maize", "price": 0.38,
-                "market": "Harare", "region": "Manicaland"},
-        ],
+        "commodities": ["maize", "beans"],
     }
     return _post_json("/forecast/demand-supply", payload)
 

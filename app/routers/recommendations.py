@@ -16,6 +16,22 @@ from app.services.integrations import (
 router = APIRouter()
 
 
+def _normalize_region(value: str) -> str:
+    if not value:
+        return ""
+    normalized = value.strip().lower()
+    return config.REGION_ALIASES.get(normalized, normalized)
+
+
+def _season_to_month(season: str) -> int | None:
+    if not season:
+        return None
+    months = config.ZWE_SEASONS.get(season)
+    if not months:
+        return None
+    return months[len(months) // 2]
+
+
 @router.post("/recommendations/prescriptive")
 async def prescriptive_recommendations(request: PrescriptiveRecommendationRequest):
     if request.top_n <= 0:
@@ -25,14 +41,42 @@ async def prescriptive_recommendations(request: PrescriptiveRecommendationReques
     warnings = []
     sources = []
 
-    target_month = request.month or datetime.now(UTC).month
+    region_key = _normalize_region(request.region)
+
+    if request.season and request.season not in config.ZWE_SEASONS:
+        raise HTTPException(
+            status_code=400,
+            detail="season must be one of: " +
+            ", ".join(config.ZWE_SEASONS.keys()),
+        )
+
+    if request.month is not None and not 1 <= request.month <= 12:
+        raise HTTPException(
+            status_code=400, detail="month must be between 1 and 12")
+
+    target_month = request.month
+    if target_month is None and request.season:
+        target_month = _season_to_month(request.season)
+    if target_month is None:
+        target_month = datetime.now(UTC).month
     season = request.season or season_from_month(target_month)
 
     demand_map = {item.commodity.lower(): item.expected_demand for item in (
         request.demand_forecast or [])}
 
-    climate_rain = request.climate.rainfall_mm
-    climate_temp = request.climate.temperature_c
+    climate_snapshot = request.climate
+    climate_rain = climate_snapshot.rainfall_mm if climate_snapshot else None
+    climate_temp = climate_snapshot.temperature_c if climate_snapshot else None
+
+    latitude = request.latitude
+    longitude = request.longitude
+    if latitude is None or longitude is None:
+        preset_coords = config.REGION_COORDS.get(region_key)
+        if preset_coords:
+            if latitude is None:
+                latitude = preset_coords[0]
+            if longitude is None:
+                longitude = preset_coords[1]
 
     market_df = None
     if request.market_data:
@@ -40,10 +84,33 @@ async def prescriptive_recommendations(request: PrescriptiveRecommendationReques
                                  for item in request.market_data])
         market_df = apply_region_filter(market_df, request.region)
 
+    preset_climate = config.REGION_SEASON_CLIMATE.get(
+        region_key, {}).get(season)
+    if preset_climate:
+        used_preset = False
+        if climate_rain is None and preset_climate.get("rainfall_mm") is not None:
+            climate_rain = preset_climate.get("rainfall_mm")
+            used_preset = True
+        if climate_temp is None and preset_climate.get("temperature_c") is not None:
+            climate_temp = preset_climate.get("temperature_c")
+            used_preset = True
+        if used_preset:
+            sources.append("preset_climate")
+
     if request.auto_fetch_external:
-        if (climate_rain is None or climate_temp is None) and request.latitude is not None and request.longitude is not None:
+        if (climate_rain is None or climate_temp is None) and (
+            latitude is None or longitude is None
+        ):
+            raise HTTPException(
+                status_code=400,
+                detail=(
+                    "unable to infer climate for region; provide latitude/longitude, "
+                    "climate snapshot, or a supported region preset"
+                ),
+            )
+        if (climate_rain is None or climate_temp is None) and latitude is not None and longitude is not None:
             weather_payload, weather_source, warning = await fetch_weather_open_meteo(
-                request.latitude, request.longitude, days=14
+                latitude, longitude, days=14
             )
             if weather_payload:
                 weather_df = pd.DataFrame(weather_payload)
@@ -140,5 +207,7 @@ async def prescriptive_recommendations(request: PrescriptiveRecommendationReques
             "crop profiles reflect typical Zimbabwe growing ranges",
             "budget score uses a rough cost-per-hectare estimate",
             "market targets use average prices in provided market_data",
+            "season is inferred from month when not provided",
+            "preset climate values are used before fetching live weather",
         ],
     }

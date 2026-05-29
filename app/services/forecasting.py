@@ -1,12 +1,319 @@
 from datetime import UTC, datetime, timedelta
-from typing import Any, Dict, List, Optional
+from difflib import get_close_matches
+from typing import Any, Dict, List, Optional, Tuple
 
 import numpy as np
 import pandas as pd
 
 from app.services.common import clamp, safe_mean, season_from_month
+from app.state import (
+    demand_features,
+    demand_models,
+    price_forecast_features,
+    price_forecast_models,
+    supply_features,
+    supply_models,
+)
 
 MARKET_SIGNAL_STALE_AFTER_DAYS = 45
+
+FORECAST_ALIASES = {
+    "maize": "Maize",
+    "beans": "Beans",
+    "groundnuts": "Groundnuts (shelled)",
+    "rice": "Rice",
+    "sorghum": "Sorghum",
+    "millet": "Millet",
+}
+
+
+def _resolve_label(
+    raw_value: Optional[str],
+    available: List[str],
+    aliases: Optional[Dict[str, str]] = None,
+    ) -> Optional[str]:
+    if not raw_value:
+        return None
+    target = raw_value.strip()
+    if not target or not available:
+        return None
+
+    exact_lookup = {item.casefold(): item for item in available}
+    if target.casefold() in exact_lookup:
+        return exact_lookup[target.casefold()]
+
+    lowered = target.casefold()
+    if aliases and lowered in aliases:
+        candidate = aliases[lowered]
+        if candidate.casefold() in exact_lookup:
+            return exact_lookup[candidate.casefold()]
+
+    substring_matches = [
+        item for item in available
+        if lowered in item.casefold() or item.casefold() in lowered
+    ]
+    if len(substring_matches) == 1:
+        return substring_matches[0]
+
+    close = get_close_matches(
+        lowered, [item.casefold() for item in available], n=1, cutoff=0.6)
+    if close:
+        return exact_lookup[close[0]]
+
+    return None
+
+
+def _resolve_feature_column(
+    prefix: str,
+    raw_value: Optional[str],
+    available_cols: List[str],
+    ) -> Optional[str]:
+    if not raw_value:
+        return None
+    target = raw_value.strip()
+    if not target:
+        return None
+
+    allowed = [
+        col[len(prefix) + 1:]
+        for col in available_cols
+        if col.startswith(f"{prefix}_")
+    ]
+    if not allowed:
+        return None
+
+    exact_lookup = {item.casefold(): item for item in allowed}
+    if target.casefold() in exact_lookup:
+        return f"{prefix}_{exact_lookup[target.casefold()]}"
+
+    lowered = target.casefold()
+    substring_matches = [
+        item for item in allowed
+        if lowered in item.casefold() or item.casefold() in lowered
+    ]
+    if len(substring_matches) == 1:
+        return f"{prefix}_{substring_matches[0]}"
+
+    close = get_close_matches(
+        lowered, [item.casefold() for item in allowed], n=1, cutoff=0.6)
+    if close:
+        return f"{prefix}_{exact_lookup[close[0]]}"
+
+    return None
+
+
+def _forecast_with_model(
+    model,
+    feature_cols: List[str],
+    *,
+    region: Optional[str],
+    periods: int,
+    freq: str,
+    rounding: int,
+    ) -> Tuple[pd.DataFrame, List[str]]:
+    warnings: List[str] = []
+    future = model.make_future_dataframe(periods=periods, freq=freq)
+
+    if feature_cols:
+        for col in feature_cols:
+            future[col] = 0
+        if region:
+            region_col = _resolve_feature_column(
+                "region", region, feature_cols)
+            if region_col:
+                future[region_col] = 1
+            else:
+                warnings.append("region_not_found")
+
+    forecast = model.predict(future)
+    if "ds" not in forecast.columns:
+        return pd.DataFrame(), warnings
+
+    working = forecast.copy()
+    for col in ("yhat", "yhat_lower", "yhat_upper"):
+        if col not in working.columns:
+            working[col] = working.get("yhat", 0.0)
+
+    result = working[["ds", "yhat", "yhat_lower",
+                      "yhat_upper"]].tail(periods).copy()
+    result[["yhat", "yhat_lower", "yhat_upper"]] = (
+        result[["yhat", "yhat_lower", "yhat_upper"]]
+        .clip(lower=0)
+        .round(rounding)
+    )
+    return result.reset_index(drop=True), warnings
+
+
+def build_price_forecast_response(
+    commodity: str,
+    *,
+    region: Optional[str],
+    periods: int,
+    visual: bool,
+    ) -> Dict[str, Any]:
+    available = sorted(price_forecast_models.keys())
+    resolved = _resolve_label(commodity, available, FORECAST_ALIASES)
+    if not resolved:
+        raise ValueError("commodity_not_found")
+
+    model = price_forecast_models[resolved]
+    feature_cols = price_forecast_features.get(resolved, [])
+
+    forecast_df, warnings = _forecast_with_model(
+        model,
+        feature_cols,
+        region=region,
+        periods=periods,
+        freq="MS",
+        rounding=4,
+    )
+
+    records = [
+        {
+            "date": row["ds"].strftime("%Y-%m-%d"),
+            "value": float(row["yhat"]),
+            "lower": float(row["yhat_lower"]),
+            "upper": float(row["yhat_upper"]),
+        }
+        for _, row in forecast_df.iterrows()
+    ]
+
+    response: Dict[str, Any] = {
+        "commodity": resolved,
+        "region": region,
+        "periods": periods,
+        "forecast": records,
+    }
+    if warnings:
+        response["warnings"] = warnings
+    if visual:
+        response["visual"] = {
+            "type": "line",
+            "x": [record["date"] for record in records],
+            "series": [
+                {
+                    "name": "Price Forecast",
+                    "data": [record["value"] for record in records],
+                }
+            ],
+        }
+
+    return response
+
+
+def build_demand_supply_response(
+    commodities: Optional[List[str]],
+    *,
+    region: Optional[str],
+    periods: int,
+    ) -> Dict[str, Any]:
+    demand_available = sorted(demand_models.keys())
+    supply_available = sorted(supply_models.keys())
+
+    target = [item for item in (commodities or []) if item]
+    if not target:
+        target = sorted(set(demand_available) & set(supply_available))
+    warnings: List[str] = []
+    forecasts: List[Dict[str, Any]] = []
+
+    for raw in target:
+        demand_key = _resolve_label(raw, demand_available, FORECAST_ALIASES)
+        supply_key = _resolve_label(raw, supply_available, FORECAST_ALIASES)
+        if not demand_key or not supply_key:
+            warnings.append(f"commodity_not_found:{raw}")
+            continue
+
+        demand_df, demand_warnings = _forecast_with_model(
+            demand_models[demand_key],
+            demand_features.get(demand_key, []),
+            region=region,
+            periods=periods,
+            freq="MS",
+            rounding=1,
+        )
+        supply_df, supply_warnings = _forecast_with_model(
+            supply_models[supply_key],
+            supply_features.get(supply_key, []),
+            region=region,
+            periods=periods,
+            freq="MS",
+            rounding=1,
+        )
+        warnings.extend(demand_warnings)
+        warnings.extend(supply_warnings)
+
+        demand_df = demand_df.rename(columns={
+            "yhat": "demand",
+            "yhat_lower": "demand_lower",
+            "yhat_upper": "demand_upper",
+        })
+        supply_df = supply_df.rename(columns={
+            "yhat": "supply",
+            "yhat_lower": "supply_lower",
+            "yhat_upper": "supply_upper",
+        })
+
+        merged = demand_df.merge(supply_df, on="ds", how="inner")
+        merged["gap"] = (merged["supply"] - merged["demand"]).round(1)
+        merged["gap_pct"] = np.where(
+            merged["demand"] > 0,
+            ((merged["supply"] - merged["demand"]) /
+             merged["demand"] * 100).round(1),
+            0.0,
+        )
+        merged["status"] = merged["gap"].apply(
+            lambda g: "SURPLUS" if g > 0 else (
+                "SHORTAGE" if g < 0 else "BALANCED")
+        )
+
+        demand_records = [
+            {
+                "date": row["ds"].strftime("%Y-%m-%d"),
+                "value": float(row["demand"]),
+                "lower": float(row["demand_lower"]),
+                "upper": float(row["demand_upper"]),
+            }
+            for _, row in demand_df.iterrows()
+        ]
+        supply_records = [
+            {
+                "date": row["ds"].strftime("%Y-%m-%d"),
+                "value": float(row["supply"]),
+                "lower": float(row["supply_lower"]),
+                "upper": float(row["supply_upper"]),
+            }
+            for _, row in supply_df.iterrows()
+        ]
+        gap_records = [
+            {
+                "date": row["ds"].strftime("%Y-%m-%d"),
+                "gap": float(row["gap"]),
+                "gap_pct": float(row["gap_pct"]),
+                "status": row["status"],
+            }
+            for _, row in merged.iterrows()
+        ]
+
+        forecasts.append({
+            "commodity": demand_key,
+            "region": region or "National",
+            "demand": demand_records,
+            "supply": supply_records,
+            "gap": gap_records,
+        })
+
+    return {
+        "region": region,
+        "periods": periods,
+        "generated_at": datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "forecasts": forecasts,
+        "warnings": warnings,
+        "assumptions": [
+            "prophet models are trained per commodity",
+            "regional effects are represented via one-hot regressors",
+            "gap = supply - demand; positive indicates surplus",
+        ],
+    }
 
 
 def apply_region_filter(df: pd.DataFrame, region: str) -> pd.DataFrame:
@@ -119,8 +426,10 @@ def summarize_market_signal(market_df: Optional[pd.DataFrame], commodity: str) -
         summary["warning"] = "market_commodity_has_no_valid_rows"
         return summary
 
-    summary["latest_observation_date"] = latest_observation.strftime("%Y-%m-%d")
-    age_days = max(0, (datetime.now(UTC) - latest_observation.to_pydatetime()).days)
+    summary["latest_observation_date"] = latest_observation.strftime(
+        "%Y-%m-%d")
+    age_days = max(
+        0, (datetime.now(UTC) - latest_observation.to_pydatetime()).days)
     if age_days > MARKET_SIGNAL_STALE_AFTER_DAYS:
         summary["is_stale"] = True
         summary["warning"] = f"market_data_stale:{age_days}d_old"
@@ -148,7 +457,7 @@ def forecast_monthly_series(
     periods: int,
     weather_impact: float,
     market_impact: float,
-) -> List[Dict[str, Any]]:
+    ) -> List[Dict[str, Any]]:
     """Forecast future monthly quantities using seasonal profile + linear trend.
 
     The forecast baseline is a month-of-year seasonal mean adjusted by a simple

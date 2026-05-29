@@ -23,12 +23,20 @@ class DummyPricingModel:
 
 
 class DummyForecastModel:
-    def make_future_dataframe(self, periods=30):
+    def make_future_dataframe(self, periods=30, freq="D"):
         start = pd.Timestamp("2024-01-01")
-        return pd.DataFrame({"ds": pd.date_range(start, periods=periods + 1, freq="D")})
+        return pd.DataFrame({"ds": pd.date_range(start, periods=periods + 1, freq=freq)})
 
     def predict(self, future):
-        return pd.DataFrame({"ds": future["ds"], "yhat": np.linspace(10, 20, len(future))})
+        yhat = np.linspace(10, 20, len(future))
+        return pd.DataFrame(
+            {
+                "ds": future["ds"],
+                "yhat": yhat,
+                "yhat_lower": yhat - 1,
+                "yhat_upper": yhat + 1,
+            }
+        )
 
 
 def _install_fake_joblib():
@@ -56,8 +64,32 @@ def _install_fake_joblib():
             ]
         if "demand_forecast_model.pkl" in path_str:
             return DummyForecastModel()
+        if "forecast_models.pkl" in path_str:
+            return {
+                "Maize": DummyForecastModel(),
+                "Beans": DummyForecastModel(),
+                "Wheat": DummyForecastModel(),
+            }
         if "forecast_features.pkl" in path_str:
-            return ["commodity_maize", "admin1_Manicaland"]
+            return {
+                "Maize": ["region_Manicaland"],
+                "Beans": ["region_Manicaland"],
+                "Wheat": ["region_Manicaland"],
+            }
+        if "forecast_commodity_list.pkl" in path_str:
+            return ["Maize", "Beans", "Wheat"]
+        if "demand_models.pkl" in path_str:
+            return {"Maize": DummyForecastModel(), "Beans": DummyForecastModel()}
+        if "demand_features.pkl" in path_str:
+            return {"Maize": ["region_Manicaland"], "Beans": ["region_Manicaland"]}
+        if "demand_commodity_list.pkl" in path_str:
+            return ["Maize", "Beans"]
+        if "supply_models.pkl" in path_str:
+            return {"Maize": DummyForecastModel(), "Beans": DummyForecastModel()}
+        if "supply_features.pkl" in path_str:
+            return {"Maize": ["region_Manicaland"], "Beans": ["region_Manicaland"]}
+        if "supply_commodity_list.pkl" in path_str:
+            return ["Maize", "Beans"]
         raise FileNotFoundError(path)
 
     fake_joblib = types.SimpleNamespace(load=fake_load)
@@ -66,10 +98,10 @@ def _install_fake_joblib():
 
 _install_fake_joblib()
 import main  # noqa: E402
+from app.services import forecasting as forecasting_service  # noqa: E402
 from app.services import integrations as integrations_service  # noqa: E402
 from app.services import pricing as pricing_service  # noqa: E402
 from app.services import trust as trust_service  # noqa: E402
-from app.routers import forecasting as forecasting_router  # noqa: E402
 from app.routers import pricing as pricing_router  # noqa: E402
 from app.routers import system as system_router  # noqa: E402
 
@@ -83,15 +115,15 @@ def _load_real_forecast_assets():
     try:
         import joblib as real_joblib
 
-        forecast_model = real_joblib.load(
-            ROOT / "ai_training" / "demand_forecast_model.pkl")
-        commodity_cols = real_joblib.load(
-            ROOT / "ai_training" / "forecast_features.pkl")
+        forecast_models = real_joblib.load(
+            ROOT / "new_ai_training" / "forecast_models.pkl")
+        forecast_features = real_joblib.load(
+            ROOT / "new_ai_training" / "forecast_features.pkl")
     finally:
         if fake_joblib is not None:
             sys.modules["joblib"] = fake_joblib
 
-    return forecast_model, commodity_cols
+    return forecast_models, forecast_features
 
 
 def test_root():
@@ -345,16 +377,20 @@ def test_forecast_endpoint():
         "/forecast/maize?periods=5&region=Manicaland&visual=true")
     assert resp.status_code == 200
     body = resp.json()
-    assert body["commodity"] == "maize"
+    assert body["commodity"] == "Maize"
     assert body["region"] == "Manicaland"
     assert len(body["forecast"]) == 5
     assert "visual" in body
 
 
 def test_forecast_endpoint_uses_real_model_artifacts(monkeypatch):
-    forecast_model, commodity_cols = _load_real_forecast_assets()
-    monkeypatch.setattr(forecasting_router, "forecast_model", forecast_model)
-    monkeypatch.setattr(forecasting_router, "commodity_cols", commodity_cols)
+    forecast_models, forecast_features = _load_real_forecast_assets()
+    monkeypatch.setattr(
+        forecasting_service, "price_forecast_models", forecast_models, raising=False
+    )
+    monkeypatch.setattr(
+        forecasting_service, "price_forecast_features", forecast_features, raising=False
+    )
 
     maize = client.get("/forecast/Maize?periods=2&visual=false").json()
     beans = client.get("/forecast/Beans?periods=2&visual=false").json()
@@ -385,11 +421,15 @@ def test_forecast_endpoint_writes_results_for_multiple_commodities(monkeypatch):
         "Rice",
         "Wheat",
     ]
-    forecast_model, commodity_cols = _load_real_forecast_assets()
+    forecast_models, forecast_features = _load_real_forecast_assets()
     results = []
 
-    monkeypatch.setattr(forecasting_router, "forecast_model", forecast_model)
-    monkeypatch.setattr(forecasting_router, "commodity_cols", commodity_cols)
+    monkeypatch.setattr(
+        forecasting_service, "price_forecast_models", forecast_models, raising=False
+    )
+    monkeypatch.setattr(
+        forecasting_service, "price_forecast_features", forecast_features, raising=False
+    )
 
     for commodity in commodities:
         response = client.get(
@@ -419,28 +459,8 @@ def test_forecast_endpoint_writes_results_for_multiple_commodities(monkeypatch):
 def test_demand_supply_forecast():
     payload = {
         "region": "Manicaland",
-        "season": "rainy",
         "periods": 3,
-        "historical_sales": [
-            {"date": "2024-01-01", "commodity": "maize",
-                "quantity": 120, "region": "Manicaland"},
-            {"date": "2024-02-01", "commodity": "maize",
-                "quantity": 135, "region": "Manicaland"},
-            {"date": "2024-01-01", "commodity": "beans",
-                "quantity": 80, "region": "Manicaland"},
-        ],
-        "weather": [
-            {"date": "2024-01-01", "rainfall_mm": 85,
-                "temperature_c": 24, "region": "Manicaland"},
-            {"date": "2024-02-01", "rainfall_mm": 90,
-                "temperature_c": 25, "region": "Manicaland"},
-        ],
-        "market_data": [
-            {"date": "2024-01-01", "commodity": "maize", "price": 0.35,
-                "market": "Harare", "region": "Manicaland"},
-            {"date": "2024-02-01", "commodity": "maize", "price": 0.38,
-                "market": "Harare", "region": "Manicaland"},
-        ],
+        "commodities": ["maize", "beans"],
     }
     resp = client.post("/forecast/demand-supply", json=payload)
     assert resp.status_code == 200
@@ -450,32 +470,19 @@ def test_demand_supply_forecast():
     assert len(body["forecasts"][0]["demand"]) == 3
 
 
-def test_demand_supply_forecast_surfaces_stale_market_signal():
+def test_demand_supply_forecast_warns_on_missing_commodities():
     payload = {
         "region": "Manicaland",
-        "season": "rainy",
         "periods": 2,
-        "historical_sales": [
-            {"date": "2024-01-01", "commodity": "maize",
-                "quantity": 120, "region": "Manicaland"},
-            {"date": "2024-02-01", "commodity": "maize",
-                "quantity": 135, "region": "Manicaland"},
-        ],
-        "market_data": [
-            {"date": "2024-01-01", "commodity": "maize", "price": 0.35,
-                "market": "Harare", "region": "Manicaland"},
-            {"date": "2024-02-01", "commodity": "maize", "price": 0.38,
-                "market": "Harare", "region": "Manicaland"},
-        ],
+        "commodities": ["maize", "unicorn crop"],
     }
     resp = client.post("/forecast/demand-supply", json=payload)
     assert resp.status_code == 200
     body = resp.json()
-    assert body["market_signals"][0]["commodity"] == "maize"
-    assert body["market_signals"][0]["impact"] == 0.0
-    assert body["market_signals"][0]["is_stale"] is True
+    assert body["forecasts"]
     assert body["warnings"]
-    assert body["warnings"][0].startswith("market_data_stale:")
+    assert any(
+        "commodity_not_found" in warning for warning in body["warnings"])
 
 
 def test_prescriptive_recommendations():

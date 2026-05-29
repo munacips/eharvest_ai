@@ -26,7 +26,7 @@ async def integrations_weather(
         le=14,
         description="Number of forecast days (1-14)",
     ),
-):
+    ):
     weather_payload, source, warning = await integrations_service.fetch_weather_open_meteo(latitude, longitude, days=days)
     response = {
         "source": source,
@@ -43,7 +43,7 @@ async def integrations_market_prices(
         None, examples={"default": {"value": "Manicaland"}}),
     commodity: Optional[str] = Query(
         None, examples={"default": {"value": "maize"}}),
-):
+    ):
     warnings: List[str] = []
     sources: List[str] = []
 

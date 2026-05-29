@@ -34,6 +34,111 @@ ZWE_SEASONS = {
 }
 
 
+REGION_ALIASES = {
+    "byo": "bulawayo",
+    "bulawayo province": "bulawayo",
+    "harare province": "harare",
+    "mash central": "mashonaland central",
+    "mashonaland central province": "mashonaland central",
+    "mashonaland central prov": "mashonaland central",
+    "mash east": "mashonaland east",
+    "mashonaland east province": "mashonaland east",
+    "mashonaland east prov": "mashonaland east",
+    "mash west": "mashonaland west",
+    "mashonaland west province": "mashonaland west",
+    "mashonaland west prov": "mashonaland west",
+    "masvingo province": "masvingo",
+    "mat north": "matabeleland north",
+    "matabeleland n": "matabeleland north",
+    "matabeleland north province": "matabeleland north",
+    "matabeleland north prov": "matabeleland north",
+    "mat south": "matabeleland south",
+    "matabeleland s": "matabeleland south",
+    "matabeleland south province": "matabeleland south",
+    "matabeleland south prov": "matabeleland south",
+    "manicaland province": "manicaland",
+    "midlands province": "midlands",
+}
+
+
+REGION_COORDS = {
+    "harare": (-17.8292, 31.0522),
+    "bulawayo": (-20.1564, 28.5880),
+    "manicaland": (-18.9216, 32.1746),
+    "mashonaland central": (-16.7644, 31.3801),
+    "mashonaland east": (-18.5872, 31.2626),
+    "mashonaland west": (-17.4851, 29.8926),
+    "masvingo": (-20.0640, 30.8320),
+    "matabeleland north": (-18.5333, 27.8500),
+    "matabeleland south": (-21.0523, 29.5280),
+    "midlands": (-19.0552, 29.6035),
+}
+
+
+REGION_SEASON_CLIMATE = {
+    "harare": {
+        "rainy": {"rainfall_mm": 180.0, "temperature_c": 23.0},
+        "post_harvest": {"rainfall_mm": 45.0, "temperature_c": 20.0},
+        "cool_dry": {"rainfall_mm": 10.0, "temperature_c": 16.0},
+        "hot_dry": {"rainfall_mm": 5.0, "temperature_c": 26.0},
+    },
+    "bulawayo": {
+        "rainy": {"rainfall_mm": 130.0, "temperature_c": 24.0},
+        "post_harvest": {"rainfall_mm": 35.0, "temperature_c": 21.0},
+        "cool_dry": {"rainfall_mm": 8.0, "temperature_c": 15.0},
+        "hot_dry": {"rainfall_mm": 4.0, "temperature_c": 27.0},
+    },
+    "manicaland": {
+        "rainy": {"rainfall_mm": 220.0, "temperature_c": 22.0},
+        "post_harvest": {"rainfall_mm": 60.0, "temperature_c": 19.0},
+        "cool_dry": {"rainfall_mm": 12.0, "temperature_c": 15.0},
+        "hot_dry": {"rainfall_mm": 6.0, "temperature_c": 25.0},
+    },
+    "mashonaland central": {
+        "rainy": {"rainfall_mm": 190.0, "temperature_c": 23.0},
+        "post_harvest": {"rainfall_mm": 50.0, "temperature_c": 20.0},
+        "cool_dry": {"rainfall_mm": 10.0, "temperature_c": 16.0},
+        "hot_dry": {"rainfall_mm": 5.0, "temperature_c": 26.0},
+    },
+    "mashonaland east": {
+        "rainy": {"rainfall_mm": 200.0, "temperature_c": 23.0},
+        "post_harvest": {"rainfall_mm": 55.0, "temperature_c": 20.0},
+        "cool_dry": {"rainfall_mm": 10.0, "temperature_c": 16.0},
+        "hot_dry": {"rainfall_mm": 5.0, "temperature_c": 26.0},
+    },
+    "mashonaland west": {
+        "rainy": {"rainfall_mm": 175.0, "temperature_c": 23.0},
+        "post_harvest": {"rainfall_mm": 45.0, "temperature_c": 20.0},
+        "cool_dry": {"rainfall_mm": 9.0, "temperature_c": 16.0},
+        "hot_dry": {"rainfall_mm": 4.0, "temperature_c": 26.0},
+    },
+    "masvingo": {
+        "rainy": {"rainfall_mm": 150.0, "temperature_c": 24.0},
+        "post_harvest": {"rainfall_mm": 40.0, "temperature_c": 21.0},
+        "cool_dry": {"rainfall_mm": 8.0, "temperature_c": 15.0},
+        "hot_dry": {"rainfall_mm": 4.0, "temperature_c": 27.0},
+    },
+    "matabeleland north": {
+        "rainy": {"rainfall_mm": 140.0, "temperature_c": 24.0},
+        "post_harvest": {"rainfall_mm": 35.0, "temperature_c": 21.0},
+        "cool_dry": {"rainfall_mm": 7.0, "temperature_c": 15.0},
+        "hot_dry": {"rainfall_mm": 4.0, "temperature_c": 27.0},
+    },
+    "matabeleland south": {
+        "rainy": {"rainfall_mm": 125.0, "temperature_c": 24.0},
+        "post_harvest": {"rainfall_mm": 30.0, "temperature_c": 21.0},
+        "cool_dry": {"rainfall_mm": 7.0, "temperature_c": 15.0},
+        "hot_dry": {"rainfall_mm": 3.0, "temperature_c": 27.0},
+    },
+    "midlands": {
+        "rainy": {"rainfall_mm": 160.0, "temperature_c": 23.0},
+        "post_harvest": {"rainfall_mm": 40.0, "temperature_c": 20.0},
+        "cool_dry": {"rainfall_mm": 10.0, "temperature_c": 16.0},
+        "hot_dry": {"rainfall_mm": 5.0, "temperature_c": 26.0},
+    },
+}
+
+
 CROP_PROFILES = {
     "maize": {"rain_min": 500, "rain_max": 1200, "temp_min": 18, "temp_max": 30, "plant_months": [10, 11, 12]},
     "sorghum": {"rain_min": 300, "rain_max": 800, "temp_min": 20, "temp_max": 35, "plant_months": [11, 12, 1]},
