@@ -30,6 +30,6 @@ jobs:
           username: ${{ secrets.AWS_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /home/ubuntu/eharvest-main
+            cd /home/ubuntu/eharvest_main
             docker compose pull eharvest_ai
             docker compose up -d eharvest_ai
