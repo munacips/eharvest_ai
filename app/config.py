@@ -171,7 +171,7 @@ SPRING_BOOT_BASE_URL = os.getenv("SPRING_BOOT_BASE_URL", "").rstrip("/")
 SPRING_BOOT_REVIEWS_PATH = os.getenv(
     "SPRING_BOOT_REVIEWS_PATH", "/api/reviews/user/{user_id}")
 PLATFORM_API_BASE_URL = os.getenv(
-    "PLATFORM_API_BASE_URL", "http://localhost:8080").rstrip("/")
+    "PLATFORM_API_BASE_URL", "http://34.206.207.121:8080").rstrip("/")
 PLATFORM_API_KEY = os.getenv("PLATFORM_API_KEY", "").strip()
 PLATFORM_API_TIMEOUT = float(os.getenv("PLATFORM_API_TIMEOUT", "6"))
 WEATHER_API_URL = os.getenv(
