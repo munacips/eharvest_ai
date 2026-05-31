@@ -22,5 +22,4 @@ ai_training/*.csv
 ai_training/*.pkl
 
 new_ai_training/*.csv
-new_ai_training/*.pkl
 new_ai_training/*.png
