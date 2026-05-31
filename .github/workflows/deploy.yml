@@ -31,5 +31,5 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /home/ubuntu/eharvest_main
-            docker compose pull eharvest_ai
-            docker compose up -d eharvest_ai
+            docker compose pull ai-service
+            docker compose up -d ai-service
